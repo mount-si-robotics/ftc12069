@@ -70,7 +70,7 @@ public class JoyStickTest extends com.qualcomm.robotcore.eventloop.opmode.Linear
             telemetry.addData("JoyPos", "LeftStick: " + -gamepad1.left_stick_y);
             telemetry.addData("JoyPos", "LeftStick2: " + -gamepad2.left_stick_y);
             telemetry.addData("JoyPos", "LeftStick2: " + -gamepad2.left_stick_x);
-            telemetry.update();
+            telemetry.update(); //testing
 
 
         }
