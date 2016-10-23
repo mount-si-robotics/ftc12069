@@ -86,8 +86,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            left = -gamepad1.left_stick_y + gamepad1.right_stick_x;
-            right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
 
             // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
@@ -96,8 +96,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-            robot.leftMotor.setPower(left);
-            robot.rightMotor.setPower(right);
+            robot.leftMotor.setPower(-left);
+            robot.rightMotor.setPower(-right);
 
             // Use gamepad left & right Bumpers to open and close the claw
             if (gamepad1.right_bumper)
@@ -111,9 +111,9 @@ public class TeleopLinearOpMode extends LinearOpMode {
             //robot.rightClaw.setPosition(robot.MID_SERVO - pointer);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.y)
+            if (gamepad2.y)
                 robot.armMotor.setPower(robot.ARM_UP_POWER);
-            else if (gamepad1.a)
+            else if (gamepad2.a)
                 robot.armMotor.setPower(robot.ARM_DOWN_POWER);
             else
                 robot.armMotor.setPower(0.0);
