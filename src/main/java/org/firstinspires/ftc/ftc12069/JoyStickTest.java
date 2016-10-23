@@ -66,11 +66,15 @@ public class JoyStickTest extends com.qualcomm.robotcore.eventloop.opmode.Linear
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("JoyPos", "LeftStick:  " + -gamepad1.left_stick_x);
-            telemetry.addData("JoyPos", "LeftStick: " + -gamepad1.left_stick_y);
-            telemetry.addData("JoyPos", "LeftStick2: " + -gamepad2.left_stick_y);
-            telemetry.addData("JoyPos", "LeftStick2: " + -gamepad2.left_stick_x);
-            telemetry.update(); //testing
+            telemetry.addData("JoyPos", "LeftStickX:  " + -gamepad1.left_stick_x);
+            telemetry.addData("JoyPos", "LeftStickY: " + -gamepad1.left_stick_y);
+            telemetry.addData("JoyPos", "RightStickX: " + -gamepad1.right_stick_x);
+            telemetry.addData("JoyPos", "RightStickY: " + -gamepad1.right_stick_y);
+            telemetry.addData("JoyPos", "LeftStick2Y: " + -gamepad2.left_stick_y);
+            telemetry.addData("JoyPos", "LeftStick2X: " + -gamepad2.left_stick_x);
+            telemetry.addData("JoyPos", "RightStick2Y: " + -gamepad2.right_stick_y);
+            telemetry.addData("JoyPos", "RightStick2X:" + -gamepad2.right_stick_x);
+            telemetry.update();
 
 
         }
