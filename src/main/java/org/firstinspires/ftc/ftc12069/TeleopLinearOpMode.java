@@ -125,7 +125,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
             telemetry.update();*/
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-            robot.waitForTick(40);
+            robot.waitForTick(40); //doing this to create my branch (Calvin)
         }
     }
 }
