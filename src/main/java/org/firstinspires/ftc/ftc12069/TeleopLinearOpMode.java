@@ -99,16 +99,14 @@ public class TeleopLinearOpMode extends LinearOpMode {
             robot.leftMotor.setPower(-left);
             robot.rightMotor.setPower(-right);
 
+
+            if (gamepad2.dpad_up)
+
             // Use gamepad left & right Bumpers to open and close the claw
             if (gamepad1.right_bumper)
                 pointer += pointer_speed;
             else if (gamepad1.left_bumper)
                 pointer -= pointer_speed;
-
-            // Move both servos to new position.  Assume servos are mirror image of each other.
-           // pointer = Range.clip(pointer, -0.5, 0.5);
-            //robot.leftClaw.setPosition(robot.MID_SERVO + pointer);
-            //robot.rightClaw.setPosition(robot.MID_SERVO - pointer);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
             if (gamepad2.y)
@@ -118,11 +116,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
             else
                 robot.armMotor.setPower(0.0);
 
-            // Send telemetry message to signify robot running;
-            /*telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-            telemetry.addData("left",  "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
-            telemetry.update();*/
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
             robot.waitForTick(0);
