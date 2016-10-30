@@ -78,6 +78,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
+//used for red team
 
 /*
 * runs gyro to turn right 45 degrees
@@ -124,7 +125,7 @@ public class Autonomous extends LinearOpMode {
     //////////////////////// Distance From Wall ///////////////////
     OpticalDistanceSensor opticalDistanceSensor;  // Hardware Device Object
     ///////////////////////////////////////////////////////////////
-
+    double distance1;
 
     ///////////////////////// Time ///////////////////////////
     private ElapsedTime runtime = new ElapsedTime();
@@ -139,18 +140,12 @@ public class Autonomous extends LinearOpMode {
         colorSensor.enableLed(true);
 
         waitForStart(); //wait for driver to press play
-
-        gyro(60.0, -45.0, 0.2);
+        distance1 = 60.0;
+        gyro(distance1, -45.0, 0.2);
         //gyro drive uses distance sensor to see how close to wall
         //then switches to bin class
         //gyro(distance, angle, holdTime)
 
-        //////////////////////////////////
-        // while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
-        // Display the light level while we are looking for the line
-        //telemetry.addData("Light Level", lightSensor.getLightDetected());
-        //  telemetry.update();
-        //}
     }
 
     //set gyro information and run gyro
@@ -230,6 +225,7 @@ public class Autonomous extends LinearOpMode {
         double rightSpeed;
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
+        wall();
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
@@ -249,6 +245,8 @@ public class Autonomous extends LinearOpMode {
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             robot.leftMotor.setPower(speed);
             robot.rightMotor.setPower(speed);
+
+            wall();
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
@@ -275,25 +273,11 @@ public class Autonomous extends LinearOpMode {
                 robot.leftMotor.setPower(leftSpeed);
                 robot.rightMotor.setPower(rightSpeed);
 
-                double reflectance = opticalDistanceSensor.getLightDetected();
-
-                if (reflectance < 0.189) {
-                    // Stop all motion;
-                    robot.leftMotor.setPower(0);
-                    robot.rightMotor.setPower(0);
-
-                    // Turn off RUN_TO_POSITION
-                    robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                    bin();
-                } else {
-                    gyroDrive(DRIVE_SPEED, distance, 0.0);
-                }
+                wall();
 
 
             }
-
+            wall();
             /*// Stop all motion;
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
@@ -302,7 +286,6 @@ public class Autonomous extends LinearOpMode {
             /*// Turn off RUN_TO_POSITION
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
-
 
         }
 
@@ -427,100 +410,85 @@ public class Autonomous extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
+    public void wall() {
+        double reflectance = opticalDistanceSensor.getLightDetected();
+        if (reflectance <= 1.0 && reflectance > 0.5){
+            line();
+        }
+        else {
+            gyroDrive(DRIVE_SPEED, distance1, 0.0);
+        }
+    }
 
     public void line() {
-         double lightAmount = lineLight();
-        // Start the robot moving forward, and then begin looking for a white line.
+        double reflectance = opticalDistanceSensor.getLightDetected();
         robot.leftMotor.setPower(APPROACH_SPEED);
         robot.rightMotor.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
-        while (opModeIsActive() && (lightAmount < WHITE_THRESHOLD)) {
-            lightAmount = lineLight();
+        while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+
+            // Display the light level while we are looking for the line
+            telemetry.addData("Light Level", lightSensor.getLightDetected());
+            telemetry.update();
+
+            if (lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+                robot.leftMotor.setPower(0.0);
+                robot.rightMotor.setPower(0.2);
+            } else
+                robot.leftMotor.setPower(0.2);
+                robot.rightMotor.setPower(0.0);
+
+            if (reflectance < 0.189) {
+                // Stop all motion;
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+
+                // Turn off RUN_TO_POSITION
+                robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                beacon();
+            } else {
+                gyroDrive(DRIVE_SPEED, distance1, 0.0);
+            }
         }
 
-
-        // Stop all motors
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-
     }
 
-    public double lineLight() {
 
-        lightSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");  // Alternative MR ODS sensor.
 
-        // turn on LED of light sensor.
-        lightSensor.enableLed(true);
+    public void beacon() {
 
-        telemetry.addData("Light Level", lightSensor.getLightDetected());
-        telemetry.update();
+        if(colorSensor.red() > 5) {
+            robot.leftMotor.setTargetPosition(10);
+            robot.rightMotor.setTargetPosition(0);
+            robot.leftMotor.setPower(0.5);
+            robot.rightMotor.setPower(0);
 
-        return lightSensor.getLightDetected();
-    }
+            sleep(2000);
 
-    //must fix
-    public void bin() { /* --- will use
+            robot.leftMotor.setTargetPosition(0);
+            robot.rightMotor.setTargetPosition(0);
+            robot.leftMotor.setPower(-0.5);
+            robot.rightMotor.setPower(0);
 
-        // get a reference to our Light Sensor object.
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
+            sleep(500);
+        } else {
+            robot.leftMotor.setTargetPosition(0);
+            robot.rightMotor.setTargetPosition(10);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0.5);
 
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
+            sleep(2000);
 
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+            robot.leftMotor.setTargetPosition(0);
+            robot.rightMotor.setTargetPosition(0);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
 
-        // bPrevState and bCurrState represent the previous and current state of the button.
-        boolean bPrevState = false;
-        boolean bCurrState = false;
-
-        // bLedOn represents the state of the LED.
-        boolean bLedOn = true;
-
-        // get a reference to our ColorSensor object.
-        //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-
-        // Set the LED in the beginning
-        //colorSensor.enableLed(bLedOn);
-
-        // check the status of the x button on either gamepad.
-        // don't need --------------  bCurrState = gamepad1.x;
-
-        // check for button state transitions.
-        //don't think I need ----------- if ((bCurrState == true) && (bCurrState != bPrevState)) {
-
-            // button is transitioning to a pressed state. So Toggle LED
-            //bLedOn = !bLedOn;
-            colorSensor.enableLed(bLedOn);
-        //}
-
-        // update previous state variable.
-        bPrevState = bCurrState;
-
-        // convert the RGB values to HSV values.
-        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
-
-        // send the info back to driver station using telemetry function.
-        //telemetry.addData("LED", bLedOn ? "On" : "Off");
-        //telemetry.addData("Clear", colorSensor.alpha());
-        //telemetry.addData("Red  ", colorSensor.red());
-        //telemetry.addData("Green", colorSensor.green());
-        //telemetry.addData("Blue ", colorSensor.blue());
-        //telemetry.addData("Hue", hsvValues[0]);
-
-        // change the background color to match the color detected by the RGB sensor.
-        // pass a reference to the hue, saturation, and value array as an argument
-        // to the HSVToColor method.
-        relativeLayout.post(new Runnable() {
-            public void run() {
-                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-            }
-        });
-
-        telemetry.update(); */
+            sleep(500);
+        }
     }
 
 }
