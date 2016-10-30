@@ -78,7 +78,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-//used for red team
 
 /*
 * runs gyro to turn right 45 degrees
@@ -92,7 +91,7 @@ public class Autonomous extends LinearOpMode {
 
     /////////////// Gyro //////////////////////////////////////////
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware
     ModernRoboticsI2cGyro gyro = null;                    // Additional Gyro device
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
@@ -112,11 +111,14 @@ public class Autonomous extends LinearOpMode {
     //////////////////////////////////////////////////////////////
 
 
-    /////////////////////// light sensor //////////////////////
-    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
-    static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    static final double APPROACH_SPEED = 0.5;
-    ///////////////////////////////////////////////////////////
+    ////////////////////////// Sensing Line //////////////
+    //could also use HardwarePushbotMatrix class.
+    // LightSensor lightSensor;      // Primary LEGO Light sensor,
+    //OpticalDistanceSensor   lightSensor;   // Alternative MR ODS sensor
+
+    //static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
+    //static final double APPROACH_SPEED = 0.5;
+    ////////////////////////////////////////////////////
 
     /////////////////////// color sensor ///////////////////
     ColorSensor colorSensor;    // Hardware Device Object
@@ -125,7 +127,7 @@ public class Autonomous extends LinearOpMode {
     //////////////////////// Distance From Wall ///////////////////
     OpticalDistanceSensor opticalDistanceSensor;  // Hardware Device Object
     ///////////////////////////////////////////////////////////////
-    double distance1;
+
 
     ///////////////////////// Time ///////////////////////////
     private ElapsedTime runtime = new ElapsedTime();
@@ -140,15 +142,19 @@ public class Autonomous extends LinearOpMode {
         colorSensor.enableLed(true);
 
         waitForStart(); //wait for driver to press play
-        distance1 = 60.0;
-        gyro(distance1, -45.0, 0.2);
-        //gyro drive uses distance sensor to see how close to wall
-        //then switches to bin class
+
+        gyro(60.0, -45.0, 0.5);
         //gyro(distance, angle, holdTime)
 
+        //////////////////////////////////
+        // while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+        // Display the light level while we are looking for the line
+        //telemetry.addData("Light Level", lightSensor.getLightDetected());
+        //  telemetry.update();
+        //}
     }
 
-    //set gyro information and run gyro
+
     public void gyro(double distance, double angle, double holdTime) {
         /*
          * Initialize the standard drive system variables.
@@ -158,8 +164,8 @@ public class Autonomous extends LinearOpMode {
         gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Calibrating Gyro");    //
@@ -176,8 +182,8 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData(">", "Robot Ready.");    //
         telemetry.update();
 
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
@@ -223,34 +229,31 @@ public class Autonomous extends LinearOpMode {
         double steer;
         double leftSpeed;
         double rightSpeed;
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
+        // ---- opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
-        wall();
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int) (distance * COUNTS_PER_INCH);
-            newLeftTarget = robot.leftMotor.getCurrentPosition() + moveCounts;
-            newRightTarget = robot.rightMotor.getCurrentPosition() + moveCounts;
+            newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
+            newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
 
             // Set Target and Turn On RUN_TO_POSITION
-            robot.leftMotor.setTargetPosition(newLeftTarget);
-            robot.rightMotor.setTargetPosition(newRightTarget);
+            robot.LBMotor.setTargetPosition(newLeftTarget);
+            robot.RBMotor.setTargetPosition(newRightTarget);
 
-            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            robot.leftMotor.setPower(speed);
-            robot.rightMotor.setPower(speed);
-
-            wall();
+            robot.LBMotor.setPower(speed);
+            robot.RBMotor.setPower(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
+                    (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -270,22 +273,46 @@ public class Autonomous extends LinearOpMode {
                     rightSpeed /= max;
                 }
 
-                robot.leftMotor.setPower(leftSpeed);
-                robot.rightMotor.setPower(rightSpeed);
+                robot.LBMotor.setPower(leftSpeed);
+                robot.RBMotor.setPower(rightSpeed);
 
-                wall();
+                // Display drive status for the driver.
+
+                //telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
+                //telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
+                //telemetry.addData("Actual", "%7d:%7d", robot.LBMotor.getCurrentPosition(),
+                  //      robot.RBMotor.getCurrentPosition());
+                //telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+                //telemetry.update();
+
+                /* ------   double reflectance = opticalDistanceSensor.getLightDetected();
+
+                if (reflectance < 0.189) {
+                    // Stop all motion;
+                    robot.LBMotor.setPower(0);
+                    robot.RBMotor.setPower(0);
+
+                    // Turn off RUN_TO_POSITION
+                    robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                    bin();
+                } else {
+                    gyroDrive(DRIVE_SPEED, distance, 0.0);
+                } */
 
 
             }
-            wall();
+
             /*// Stop all motion;
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
+            robot.LBMotor.setPower(0);
+            robot.RBMotor.setPower(0);
             */
 
             /*// Turn off RUN_TO_POSITION
-            robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+            robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+
 
         }
 
@@ -334,8 +361,8 @@ public class Autonomous extends LinearOpMode {
         }
 
         // Stop all motion;
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        robot.LBMotor.setPower(0);
+        robot.RBMotor.setPower(0);
     }
 
     /**
@@ -370,8 +397,8 @@ public class Autonomous extends LinearOpMode {
         }
 
         // Send desired speeds to motors.
-        robot.leftMotor.setPower(leftSpeed);
-        robot.rightMotor.setPower(rightSpeed);
+        robot.LBMotor.setPower(leftSpeed);
+        robot.RBMotor.setPower(rightSpeed);
 
         // Display it for the driver.
         telemetry.addData("Target", "%5.2f", angle);
@@ -410,85 +437,67 @@ public class Autonomous extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    public void wall() {
-        double reflectance = opticalDistanceSensor.getLightDetected();
-        if (reflectance <= 1.0 && reflectance > 0.5){
-            line();
-        }
-        else {
-            gyroDrive(DRIVE_SPEED, distance1, 0.0);
-        }
-    }
+    public void bin() { /* --- will use
 
-    public void line() {
-        double reflectance = opticalDistanceSensor.getLightDetected();
-        robot.leftMotor.setPower(APPROACH_SPEED);
-        robot.rightMotor.setPower(APPROACH_SPEED);
+        // get a reference to our Light Sensor object.
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
 
-        // run until the white line is seen OR the driver presses STOP;
-        while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
 
-            // Display the light level while we are looking for the line
-            telemetry.addData("Light Level", lightSensor.getLightDetected());
-            telemetry.update();
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
 
-            if (lightSensor.getLightDetected() < WHITE_THRESHOLD) {
-                robot.leftMotor.setPower(0.0);
-                robot.rightMotor.setPower(0.2);
-            } else
-                robot.leftMotor.setPower(0.2);
-                robot.rightMotor.setPower(0.0);
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
 
-            if (reflectance < 0.189) {
-                // Stop all motion;
-                robot.leftMotor.setPower(0);
-                robot.rightMotor.setPower(0);
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = true;
 
-                // Turn off RUN_TO_POSITION
-                robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // get a reference to our ColorSensor object.
+        //colorSensor = hardwareMap.colorSensor.get("sensor_color");
 
-                beacon();
-            } else {
-                gyroDrive(DRIVE_SPEED, distance1, 0.0);
+        // Set the LED in the beginning
+        //colorSensor.enableLed(bLedOn);
+
+        // check the status of the x button on either gamepad.
+        // don't need --------------  bCurrState = gamepad1.x;
+
+        // check for button state transitions.
+        //don't think I need ----------- if ((bCurrState == true) && (bCurrState != bPrevState)) {
+
+            // button is transitioning to a pressed state. So Toggle LED
+            //bLedOn = !bLedOn;
+            colorSensor.enableLed(bLedOn);
+        //}
+
+        // update previous state variable.
+        bPrevState = bCurrState;
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        //telemetry.addData("LED", bLedOn ? "On" : "Off");
+        //telemetry.addData("Clear", colorSensor.alpha());
+        //telemetry.addData("Red  ", colorSensor.red());
+        //telemetry.addData("Green", colorSensor.green());
+        //telemetry.addData("Blue ", colorSensor.blue());
+        //telemetry.addData("Hue", hsvValues[0]);
+
+        // change the background color to match the color detected by the RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        relativeLayout.post(new Runnable() {
+            public void run() {
+                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
             }
-        }
+        });
 
-    }
-
-
-
-    public void beacon() {
-
-        if(colorSensor.red() > 5) {
-            robot.leftMotor.setTargetPosition(10);
-            robot.rightMotor.setTargetPosition(0);
-            robot.leftMotor.setPower(0.5);
-            robot.rightMotor.setPower(0);
-
-            sleep(2000);
-
-            robot.leftMotor.setTargetPosition(0);
-            robot.rightMotor.setTargetPosition(0);
-            robot.leftMotor.setPower(-0.5);
-            robot.rightMotor.setPower(0);
-
-            sleep(500);
-        } else {
-            robot.leftMotor.setTargetPosition(0);
-            robot.rightMotor.setTargetPosition(10);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0.5);
-
-            sleep(2000);
-
-            robot.leftMotor.setTargetPosition(0);
-            robot.rightMotor.setTargetPosition(0);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-
-            sleep(500);
-        }
+        telemetry.update(); */
     }
 
 }
