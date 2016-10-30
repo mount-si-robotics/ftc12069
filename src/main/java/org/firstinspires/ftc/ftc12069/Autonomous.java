@@ -111,14 +111,11 @@ public class Autonomous extends LinearOpMode {
     //////////////////////////////////////////////////////////////
 
 
-    ////////////////////////// Sensing Line //////////////
-    //could also use HardwarePushbotMatrix class.
-    // LightSensor lightSensor;      // Primary LEGO Light sensor,
-    //OpticalDistanceSensor   lightSensor;   // Alternative MR ODS sensor
-
-    //static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    //static final double APPROACH_SPEED = 0.5;
-    ////////////////////////////////////////////////////
+    /////////////////////// light sensor //////////////////////
+    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
+    static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
+    static final double APPROACH_SPEED = 0.5;
+    ///////////////////////////////////////////////////////////
 
     /////////////////////// color sensor ///////////////////
     ColorSensor colorSensor;    // Hardware Device Object
@@ -143,7 +140,9 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart(); //wait for driver to press play
 
-        gyro(60.0, -45.0, 0.5);
+        gyro(60.0, -45.0, 0.2);
+        //gyro drive uses distance sensor to see how close to wall
+        //then switches to bin class
         //gyro(distance, angle, holdTime)
 
         //////////////////////////////////
@@ -154,7 +153,7 @@ public class Autonomous extends LinearOpMode {
         //}
     }
 
-
+    //set gyro information and run gyro
     public void gyro(double distance, double angle, double holdTime) {
         /*
          * Initialize the standard drive system variables.
@@ -229,7 +228,7 @@ public class Autonomous extends LinearOpMode {
         double steer;
         double leftSpeed;
         double rightSpeed;
-        // ---- opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -276,16 +275,7 @@ public class Autonomous extends LinearOpMode {
                 robot.leftMotor.setPower(leftSpeed);
                 robot.rightMotor.setPower(rightSpeed);
 
-                // Display drive status for the driver.
-
-                //telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
-                //telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
-                //telemetry.addData("Actual", "%7d:%7d", robot.leftMotor.getCurrentPosition(),
-                  //      robot.rightMotor.getCurrentPosition());
-                //telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
-                //telemetry.update();
-
-                /* ------   double reflectance = opticalDistanceSensor.getLightDetected();
+                double reflectance = opticalDistanceSensor.getLightDetected();
 
                 if (reflectance < 0.189) {
                     // Stop all motion;
@@ -299,7 +289,7 @@ public class Autonomous extends LinearOpMode {
                     bin();
                 } else {
                     gyroDrive(DRIVE_SPEED, distance, 0.0);
-                } */
+                }
 
 
             }
@@ -437,6 +427,39 @@ public class Autonomous extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
+
+    public void line() {
+         double lightAmount = lineLight();
+        // Start the robot moving forward, and then begin looking for a white line.
+        robot.leftMotor.setPower(APPROACH_SPEED);
+        robot.rightMotor.setPower(APPROACH_SPEED);
+
+        // run until the white line is seen OR the driver presses STOP;
+        while (opModeIsActive() && (lightAmount < WHITE_THRESHOLD)) {
+            lightAmount = lineLight();
+        }
+
+
+        // Stop all motors
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+    }
+
+    public double lineLight() {
+
+        lightSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");  // Alternative MR ODS sensor.
+
+        // turn on LED of light sensor.
+        lightSensor.enableLed(true);
+
+        telemetry.addData("Light Level", lightSensor.getLightDetected());
+        telemetry.update();
+
+        return lightSensor.getLightDetected();
+    }
+
+    //must fix
     public void bin() { /* --- will use
 
         // get a reference to our Light Sensor object.
