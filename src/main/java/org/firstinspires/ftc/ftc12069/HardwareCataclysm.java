@@ -16,9 +16,8 @@ public class HardwareCataclysm
     public DcMotor  flickMotor    = null;
     public Servo conveyorBelt    = null;
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double FLICK_POWER = 1;
+    public static final double FLICK_POWER_REVERSE = 1;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -33,9 +32,9 @@ public class HardwareCataclysm
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        LBMotor = hwMap.dcMotor.get("left_drive");
-        RBMotor = hwMap.dcMotor.get("right_drive");
-        flickMotor = hwMap.dcMotor.get("left_arm");
+        LBMotor = hwMap.dcMotor.get("leftBackMotor");
+        RBMotor = hwMap.dcMotor.get("rightBackMotor");
+        flickMotor = hwMap.dcMotor.get("flickArm");
         LBMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         RBMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -51,8 +50,8 @@ public class HardwareCataclysm
         flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        conveyorBelt = hwMap.servo.get("left_hand");
-        conveyorBelt.setPosition(MID_SERVO);
+        conveyorBelt = hwMap.servo.get("conveyorServo");
+        conveyorBelt.setDirection(Servo.Direction.FORWARD);
     }
 
     public void waitForTick(long periodMs) {

@@ -32,36 +32,20 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.ftc12069;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-/**
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- * The code is structured as a LinearOpMode
- * <p>
- * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- * <p>
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name = "Catacylsm Teleop Linear OpMode", group = "Cataclysm Pushbot OpModes")
+@TeleOp(name = "Catacylsm Teleop Linear OpMode", group = "Cataclysm Hardware OpModes")
 //@Disabled
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
-    // could also use HardwarePushbotMatrix class.
+    HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware map
+
     double pointer = 0;                       // Servo mid position
-    final double pointer_speed = 0.02;                   // sets rate to move servo
+    final double pointer_speed = 1;                   // sets rate to move servo
 
     @Override
     public void runOpMode() {
@@ -96,25 +80,24 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-            robot.leftMotor.setPower(-left);
-            robot.rightMotor.setPower(-right);
-
-
-            if (gamepad2.dpad_up)
+            robot.LBMotor.setPower(-left);
+            robot.RBMotor.setPower(-right);
 
             // Use gamepad left & right Bumpers to open and close the claw
-            if (gamepad1.right_bumper)
-                pointer += pointer_speed;
-            else if (gamepad1.left_bumper)
-                pointer -= pointer_speed;
+            if (gamepad2.dpad_up)
+                robot.conveyorBelt.setDirection(Servo.Direction.FORWARD);
+            else if (gamepad2.dpad_down)
+                robot.conveyorBelt.setDirection(Servo.Direction.REVERSE);
+            else
+                robot.conveyorBelt.setDirection(null);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
             if (gamepad2.y)
-                robot.armMotor.setPower(robot.ARM_UP_POWER);
+                robot.flickMotor.setPower(robot.FLICK_POWER);
             else if (gamepad2.a)
-                robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+                robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
             else
-                robot.armMotor.setPower(0.0);
+                robot.flickMotor.setPower(0.0);
 
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
