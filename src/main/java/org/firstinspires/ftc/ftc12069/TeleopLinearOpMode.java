@@ -32,7 +32,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.ftc12069;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -43,9 +42,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware map
-
-    double pointer = 0;                       // Servo mid position
-    final double pointer_speed = 1;                   // sets rate to move servo
 
     @Override
     public void runOpMode() {
@@ -59,7 +55,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello Driver");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -68,8 +64,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+            // Run wheels in tank drive mode
+            // In this mode the left stick controls the left of the robot and the right stick controls the right side
             left = -gamepad1.left_stick_y;
             right = -gamepad1.right_stick_y;
 
@@ -83,7 +79,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
             robot.LBMotor.setPower(-left);
             robot.RBMotor.setPower(-right);
 
-            // Use gamepad left & right Bumpers to open and close the claw
+            // Use gamepad2 d-pad to control conveyor belt direction
             if (gamepad2.dpad_up)
                 robot.conveyorBelt.setDirection(Servo.Direction.FORWARD);
             else if (gamepad2.dpad_down)
@@ -91,7 +87,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
             else
                 robot.conveyorBelt.setDirection(null);
 
-            // Use gamepad buttons to move arm up (Y) and down (A)
+            // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y)
                 robot.flickMotor.setPower(robot.FLICK_POWER);
             else if (gamepad2.a)
@@ -100,7 +96,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 robot.flickMotor.setPower(0.0);
 
 
-            // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
+            // Pause for metronome tick
             robot.waitForTick(0);
         }
     }

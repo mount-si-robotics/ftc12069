@@ -91,7 +91,7 @@ public class Autonomous extends LinearOpMode {
 
     /////////////// Gyro //////////////////////////////////////////
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware
     ModernRoboticsI2cGyro gyro = null;                    // Additional Gyro device
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
@@ -164,8 +164,8 @@ public class Autonomous extends LinearOpMode {
         gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Calibrating Gyro");    //
@@ -182,8 +182,8 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData(">", "Robot Ready.");    //
         telemetry.update();
 
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
@@ -236,24 +236,24 @@ public class Autonomous extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int) (distance * COUNTS_PER_INCH);
-            newLeftTarget = robot.leftMotor.getCurrentPosition() + moveCounts;
-            newRightTarget = robot.rightMotor.getCurrentPosition() + moveCounts;
+            newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
+            newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
 
             // Set Target and Turn On RUN_TO_POSITION
-            robot.leftMotor.setTargetPosition(newLeftTarget);
-            robot.rightMotor.setTargetPosition(newRightTarget);
+            robot.LBMotor.setTargetPosition(newLeftTarget);
+            robot.RBMotor.setTargetPosition(newRightTarget);
 
-            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            robot.leftMotor.setPower(speed);
-            robot.rightMotor.setPower(speed);
+            robot.LBMotor.setPower(speed);
+            robot.RBMotor.setPower(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
+                    (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -273,15 +273,15 @@ public class Autonomous extends LinearOpMode {
                     rightSpeed /= max;
                 }
 
-                robot.leftMotor.setPower(leftSpeed);
-                robot.rightMotor.setPower(rightSpeed);
+                robot.LBMotor.setPower(leftSpeed);
+                robot.RBMotor.setPower(rightSpeed);
 
                 // Display drive status for the driver.
 
                 //telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
                 //telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
-                //telemetry.addData("Actual", "%7d:%7d", robot.leftMotor.getCurrentPosition(),
-                  //      robot.rightMotor.getCurrentPosition());
+                //telemetry.addData("Actual", "%7d:%7d", robot.LBMotor.getCurrentPosition(),
+                  //      robot.RBMotor.getCurrentPosition());
                 //telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
                 //telemetry.update();
 
@@ -289,12 +289,12 @@ public class Autonomous extends LinearOpMode {
 
                 if (reflectance < 0.189) {
                     // Stop all motion;
-                    robot.leftMotor.setPower(0);
-                    robot.rightMotor.setPower(0);
+                    robot.LBMotor.setPower(0);
+                    robot.RBMotor.setPower(0);
 
                     // Turn off RUN_TO_POSITION
-                    robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                     bin();
                 } else {
@@ -305,13 +305,13 @@ public class Autonomous extends LinearOpMode {
             }
 
             /*// Stop all motion;
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
+            robot.LBMotor.setPower(0);
+            robot.RBMotor.setPower(0);
             */
 
             /*// Turn off RUN_TO_POSITION
-            robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+            robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
 
         }
@@ -361,8 +361,8 @@ public class Autonomous extends LinearOpMode {
         }
 
         // Stop all motion;
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        robot.LBMotor.setPower(0);
+        robot.RBMotor.setPower(0);
     }
 
     /**
@@ -397,8 +397,8 @@ public class Autonomous extends LinearOpMode {
         }
 
         // Send desired speeds to motors.
-        robot.leftMotor.setPower(leftSpeed);
-        robot.rightMotor.setPower(rightSpeed);
+        robot.LBMotor.setPower(leftSpeed);
+        robot.RBMotor.setPower(rightSpeed);
 
         // Display it for the driver.
         telemetry.addData("Target", "%5.2f", angle);
