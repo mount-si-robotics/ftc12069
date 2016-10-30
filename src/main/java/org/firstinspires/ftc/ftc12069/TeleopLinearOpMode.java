@@ -35,6 +35,7 @@ package org.firstinspires.ftc.ftc12069;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -62,6 +63,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
     // could also use HardwarePushbotMatrix class.
     double pointer = 0;                       // Servo mid position
     final double pointer_speed = 0.02;                   // sets rate to move servo
+    public Servo conveyorBelt    = null;
+    public static final double MID_SERVO       =  0.5 ;
 
     @Override
     public void runOpMode() {
@@ -111,10 +114,15 @@ public class TeleopLinearOpMode extends LinearOpMode {
             // Use gamepad buttons to move arm up (Y) and down (A)
             if (gamepad2.y)
                 robot.armMotor.setPower(robot.ARM_UP_POWER);
-            else if (gamepad2.a)
-                robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-            else
-                robot.armMotor.setPower(0.0);
+                else if (gamepad2.a)
+                    robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+                else if (gamepad2.b)
+                    conveyorBelt.setPosition(1.0);
+                else if (gamepad2.x)
+                    conveyorBelt.setPosition(0.0);
+                else
+                    robot.armMotor.setPower(0.0);
+
 
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
