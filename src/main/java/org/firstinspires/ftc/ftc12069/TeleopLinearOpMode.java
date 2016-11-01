@@ -102,6 +102,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
             else
                 telemetry.addData("Report", "Not Moving");
 
+            telemetry.update();
+
             // Pause for metronome tick
             robot.waitForTick(0);
         }
