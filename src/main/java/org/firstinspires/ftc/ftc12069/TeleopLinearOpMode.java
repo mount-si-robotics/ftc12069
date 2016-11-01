@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Catacylsm Teleop Linear OpMode", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Teleop Linear OpMode V1", group = "Cataclysm Hardware OpModes")
 //@Disabled
 public class TeleopLinearOpMode extends LinearOpMode {
 
@@ -67,7 +67,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
             // Run wheels in tank drive mode
             // In this mode the left stick controls the left of the robot and the right stick controls the right side
             left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            right = gamepad1.right_stick_y;
 
             // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
@@ -95,6 +95,12 @@ public class TeleopLinearOpMode extends LinearOpMode {
             else
                 robot.flickMotor.setPower(0.0);
 
+            if (gamepad2.dpad_up)
+                telemetry.addData("Report", "Moving Forward");
+            else if (gamepad2.dpad_down)
+                telemetry.addData("Report", "Moving Reverse");
+            else
+                telemetry.addData("Report", "Not Moving");
 
             // Pause for metronome tick
             robot.waitForTick(0);

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.ftc12069;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,7 +18,7 @@ public class HardwareCataclysm
     public Servo conveyorBelt    = null;
 
     public static final double FLICK_POWER = 1;
-    public static final double FLICK_POWER_REVERSE = 1;
+    public static final double FLICK_POWER_REVERSE = -1;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -36,7 +37,7 @@ public class HardwareCataclysm
         RBMotor = hwMap.dcMotor.get("rightBackMotor");
         flickMotor = hwMap.dcMotor.get("flickArm");
         LBMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        RBMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        RBMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
         LBMotor.setPower(0);
