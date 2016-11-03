@@ -1,6 +1,9 @@
 InformationFile
-This is the third iteration of the HardwareCataclysm branch, the autonomus has been updated to work with the new hardware class in its current state
-A file was made, information file, to contain all information about the currently downloaded branch of code
-Strange errors invlolving the conveyor servo
+This is the final working teleOp program before the first scrimmage (16/11/05)
+Program has been tested and driver approved
+Errors solved:
+    Servo now works
 
-last edit made 11:56
+
+Last edit made - 15:40 16/11/03
+Submitted - 15:47 16/11/03

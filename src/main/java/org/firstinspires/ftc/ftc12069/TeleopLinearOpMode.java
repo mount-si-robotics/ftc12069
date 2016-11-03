@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Catacylsm Teleop Linear OpMode V1", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Teleop Linear OpMode V3", group = "Cataclysm Hardware OpModes")
 //@Disabled
 public class TeleopLinearOpMode extends LinearOpMode {
 
@@ -79,14 +79,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
             robot.LBMotor.setPower(-left);
             robot.RBMotor.setPower(-right);
 
-            // Use gamepad2 d-pad to control conveyor belt direction
-            if (gamepad2.dpad_up)
-                robot.conveyorBelt.setDirection(Servo.Direction.FORWARD);
-            else if (gamepad2.dpad_down)
-                robot.conveyorBelt.setDirection(Servo.Direction.REVERSE);
-            else
-                robot.conveyorBelt.setDirection(null);
-
             // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y)
                 robot.flickMotor.setPower(robot.FLICK_POWER);
@@ -95,12 +87,20 @@ public class TeleopLinearOpMode extends LinearOpMode {
             else
                 robot.flickMotor.setPower(0.0);
 
+            // Use gamepad2 d-pad to control conveyor belt direction
+            if (gamepad2.dpad_up)
+                robot.conveyorServo.setPosition(1);
+            else if (gamepad2.dpad_down)
+                robot.conveyorServo.setPosition(0);
+            else
+                robot.conveyorServo.setPosition(0.5);
+
             if (gamepad2.dpad_up)
                 telemetry.addData("Report", "Moving Forward");
             else if (gamepad2.dpad_down)
                 telemetry.addData("Report", "Moving Reverse");
             else
-                telemetry.addData("Report", "Not Moving");
+                telemetry.addData("Report", robot.conveyorServo.getDirection());
 
             telemetry.update();
 

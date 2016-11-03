@@ -16,6 +16,7 @@ public class HardwareCataclysm
     public DcMotor  RBMotor  = null;
     public DcMotor  flickMotor    = null;
     public Servo conveyorBelt    = null;
+    public Servo conveyorServo = null;
 
     public static final double FLICK_POWER = 1;
     public static final double FLICK_POWER_REVERSE = -1;
@@ -52,7 +53,9 @@ public class HardwareCataclysm
 
         // Define and initialize ALL installed servos.
         conveyorBelt = hwMap.servo.get("conveyorServo");
+        conveyorServo = hwMap.servo.get("conveyorServo");
         conveyorBelt.setDirection(Servo.Direction.FORWARD);
+        conveyorServo.setDirection(Servo.Direction.REVERSE);
     }
 
     public void waitForTick(long periodMs) {
