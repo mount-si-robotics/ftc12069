@@ -88,6 +88,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
             robot.LBMotor.setPower(-left);
             robot.RBMotor.setPower(-right);
 
+
             // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y) {
                 robot.flickMotor.setPower(robot.FLICK_POWER);
@@ -105,23 +106,35 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 telemetry.update();
             }
 
+
             // Use gamepad2 d-pad to control conveyor belt direction
-            if (gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 robot.conveyorServo.setDirection(CRServo.Direction.FORWARD);
                 telemetry.addData("Collection Status", "Conveyor: Forward");
                 telemetry.update();
             }
-            else if (gamepad2.dpad_down){
+            else if (gamepad2.dpad_down) {
                 robot.conveyorServo.setDirection(CRServo.Direction.REVERSE);
                 telemetry.addData("Collection Status", "Conveyor: Reverse");
                 telemetry.update();
             }
-            else{
+            else {
                 robot.conveyorServo.setDirection(null);
                 telemetry.addData("Collection Status", "Conveyor Stoped");
                 telemetry.update();
             }
 
+            // Use the bumpers to controll the ball collection mechanism
+            if (gamepad2.left_bumper) {
+                robot.armRight.setPosition(90);
+                robot.armLeft.setPosition(90);
+                telemetry.addData("Collection Arm Status", "Moving Down");
+            }
+            else if (gamepad2.right_bumper) {
+                robot.armLeft.setPosition(0);
+                robot.armRight.setPosition(0);
+                telemetry.addData("Collection Arm Status", "Moving Up");
+            }
             // Pause for metronome tick
             robot.waitForTick(0);
         }
