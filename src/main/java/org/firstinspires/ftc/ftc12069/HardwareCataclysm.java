@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.ftc12069;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,8 +16,7 @@ public class HardwareCataclysm
     public DcMotor LBMotor   = null;
     public DcMotor  RBMotor  = null;
     public DcMotor  flickMotor    = null;
-    public Servo conveyorBelt    = null;
-    public Servo conveyorServo = null;
+    public CRServo conveyorServo = null;
 
     public static final double FLICK_POWER = 1;
     public static final double FLICK_POWER_REVERSE = -1;
@@ -52,10 +52,8 @@ public class HardwareCataclysm
         flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        conveyorBelt = hwMap.servo.get("conveyorServo");
-        conveyorServo = hwMap.servo.get("conveyorServo");
-        conveyorBelt.setDirection(Servo.Direction.FORWARD);
-        conveyorServo.setDirection(Servo.Direction.REVERSE);
+        conveyorServo = hwMap.crservo.get("conveyorServo");
+        conveyorServo.setDirection(CRServo.Direction.FORWARD);
     }
 
     public void waitForTick(long periodMs) {

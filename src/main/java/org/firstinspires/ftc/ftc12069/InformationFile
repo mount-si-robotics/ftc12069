@@ -1,9 +1,9 @@
 InformationFile
-This is the final working teleOp program before the first scrimmage (16/11/05)
-Program has been tested and driver approved
-Errors solved:
-    Servo now works
-
+A testing iteration of the working TeleOp Mode
+Changes/Tests
+    Servo changed to CRServo to work for direction input instead of position input
+    Added dead zone to bottom five percent of joystick input
+    Also shortened code by fixing if statements
 
 Last edit made - 15:40 16/11/03
 Submitted - 15:47 16/11/03

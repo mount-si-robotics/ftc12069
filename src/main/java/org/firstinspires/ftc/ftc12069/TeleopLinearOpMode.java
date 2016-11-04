@@ -34,10 +34,9 @@ package org.firstinspires.ftc.ftc12069;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 
-@TeleOp(name = "Catacylsm Teleop Linear OpMode V3", group = "Cataclysm Hardware OpModes")
-//@Disabled
+@TeleOp(name = "Catacylsm Linear OpMode - Idea Testing", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -48,6 +47,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double left;
         double right;
         double max;
+        double min;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -55,7 +55,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");
+        telemetry.addData("Say", "Robot initialized");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -65,44 +65,59 @@ public class TeleopLinearOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank drive mode
-            // In this mode the left stick controls the left of the robot and the right stick controls the right side
             left = -gamepad1.left_stick_y;
             right = gamepad1.right_stick_y;
 
-            // Normalize the values so neither exceed +/- 1.0
+            // Normalize the values so neither exceed +/- 100
             max = Math.max(Math.abs(left), Math.abs(right));
             if (max > 1.0) {
                 left /= max;
                 right /= max;
             }
 
+            // Apply dead zones (bottom %5)
+            min = Math.min(Math.abs(left), Math.abs(right));
+            if (min < 0.05) {
+                left /= (0);
+                right /= (0);
+            }
+
             robot.LBMotor.setPower(-left);
             robot.RBMotor.setPower(-right);
 
             // Use gamepad2 y and a buttons to control flick arm
-            if (gamepad2.y)
+            if (gamepad2.y) {
                 robot.flickMotor.setPower(robot.FLICK_POWER);
-            else if (gamepad2.a)
+                telemetry.addData("Arm Status", "Flick Motor: Forward");
+                telemetry.update();
+            }
+            else if (gamepad2.a) {
                 robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
-            else
+                telemetry.addData("Arm Status", "Flick Motor: Reverse");
+                telemetry.update();
+            }
+            else {
                 robot.flickMotor.setPower(0.0);
+                telemetry.addData("Arm Status", "Flick Motor: Stopped");
+                telemetry.update();
+            }
 
             // Use gamepad2 d-pad to control conveyor belt direction
-            if (gamepad2.dpad_up)
-                robot.conveyorServo.setPosition(1);
-            else if (gamepad2.dpad_down)
-                robot.conveyorServo.setPosition(0);
-            else
-                robot.conveyorServo.setPosition(0.5);
-
-            if (gamepad2.dpad_up)
-                telemetry.addData("Report", "Moving Forward");
-            else if (gamepad2.dpad_down)
-                telemetry.addData("Report", "Moving Reverse");
-            else
-                telemetry.addData("Report", robot.conveyorServo.getDirection());
-
-            telemetry.update();
+            if (gamepad2.dpad_up){
+                robot.conveyorServo.setDirection(CRServo.Direction.FORWARD);
+                telemetry.addData("Collection Status", "Conveyor: Forward");
+                telemetry.update();
+            }
+            else if (gamepad2.dpad_down){
+                robot.conveyorServo.setDirection(CRServo.Direction.REVERSE);
+                telemetry.addData("Collection Status", "Conveyor: Reverse");
+                telemetry.update();
+            }
+            else{
+                robot.conveyorServo.setDirection(null);
+                telemetry.addData("Collection Status", "Conveyor Stoped");
+                telemetry.update();
+            }
 
             // Pause for metronome tick
             robot.waitForTick(0);
