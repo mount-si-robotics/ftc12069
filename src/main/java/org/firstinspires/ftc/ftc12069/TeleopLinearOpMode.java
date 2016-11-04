@@ -48,6 +48,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double right;
         double max;
         double min;
+        double leftMath;
+        double change = (0.5);
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -65,8 +67,9 @@ public class TeleopLinearOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank drive mode
-            left = -gamepad1.left_stick_y;
+            left = gamepad1.left_stick_y;
             right = gamepad1.right_stick_y;
+            leftMath = Math.abs((change*left)^2);
 
             // Normalize the values so neither exceed +/- 100
             max = Math.max(Math.abs(left), Math.abs(right));
