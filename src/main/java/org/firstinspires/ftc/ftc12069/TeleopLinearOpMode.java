@@ -35,8 +35,9 @@ package org.firstinspires.ftc.ftc12069;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "Catacylsm Linear OpMode - Idea Testing", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode - Drink Bleach", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -47,9 +48,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double left;
         double right;
         double max;
-        double min;
-        double leftMath;
-        double change = (0.5);
+        double conveyorPosition;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -57,7 +56,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Robot initialized");
+        telemetry.addData("Say", "Kill yourself");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -67,9 +66,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank drive mode
-            left = gamepad1.left_stick_y;
-            right = gamepad1.right_stick_y;
-            leftMath = Math.abs((change*left)^2);
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
 
             // Normalize the values so neither exceed +/- 100
             max = Math.max(Math.abs(left), Math.abs(right));
@@ -78,12 +76,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-            // Apply dead zones (bottom %5)
-            min = Math.min(Math.abs(left), Math.abs(right));
-            if (min < 0.05) {
-                left /= (0);
-                right /= (0);
-            }
 
             robot.LBMotor.setPower(-left);
             robot.RBMotor.setPower(-right);
@@ -109,25 +101,24 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Use gamepad2 d-pad to control conveyor belt direction
             if (gamepad2.dpad_up) {
-                robot.conveyorServo.setDirection(CRServo.Direction.FORWARD);
+                conveyorPosition = robot.conveyorServo.getPosition() + (0.1);
+                if (conveyorPosition > 0.8)
+                    conveyorPosition = 0;
+
+                robot.conveyorServo.setPosition(conveyorPosition);
                 telemetry.addData("Collection Status", "Conveyor: Forward");
                 telemetry.update();
             }
             else if (gamepad2.dpad_down) {
-                robot.conveyorServo.setDirection(CRServo.Direction.REVERSE);
+                robot.conveyorServo.setPosition(robot.conveyorServo.getPosition());
                 telemetry.addData("Collection Status", "Conveyor: Reverse");
-                telemetry.update();
-            }
-            else {
-                robot.conveyorServo.setDirection(null);
-                telemetry.addData("Collection Status", "Conveyor Stoped");
                 telemetry.update();
             }
 
             // Use the bumpers to controll the ball collection mechanism
             if (gamepad2.left_bumper) {
-                robot.armRight.setPosition(90);
-                robot.armLeft.setPosition(90);
+                robot.armRight.setPosition(0.5);
+                robot.armLeft.setPosition(0.5);
                 telemetry.addData("Collection Arm Status", "Moving Down");
             }
             else if (gamepad2.right_bumper) {
