@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "Catacylsm Linear OpMode - Drink Bleach", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode - WIP", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -56,7 +56,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Kill yourself");
+        telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
