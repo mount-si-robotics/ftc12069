@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "Catacylsm Linear OpMode - WIP", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode - WIP V3.5", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -48,7 +48,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double left;
         double right;
         double max;
-        double conveyorPosition;
+        double stop;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -100,33 +100,43 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
 
             // Use gamepad2 d-pad to control conveyor belt direction
+            // Add code to print postition to screen
             if (gamepad2.dpad_up) {
-                conveyorPosition = robot.conveyorServo.getPosition() + (0.1);
-                if (conveyorPosition > 0.8)
-                    conveyorPosition = 0;
-
-                robot.conveyorServo.setPosition(conveyorPosition);
+                robot.conveyorServo.setPosition(1);
                 telemetry.addData("Collection Status", "Conveyor: Forward");
                 telemetry.update();
             }
             else if (gamepad2.dpad_down) {
-                robot.conveyorServo.setPosition(robot.conveyorServo.getPosition());
+                robot.conveyorServo.setPosition(0);
                 telemetry.addData("Collection Status", "Conveyor: Reverse");
                 telemetry.update();
             }
+            else {
+                stop = robot.conveyorServo.getPosition();
+                robot.conveyorServo.setPosition(stop);
+                telemetry.addData("Collection Status", "Conveyor Stopped");
+                telemetry.update();
+            }
 
-            // Use the bumpers to controll the ball collection mechanism
+            // Use the bumpers to control the ball collection mechanism
             if (gamepad2.left_bumper) {
-                robot.armRight.setPosition(0.5);
-                robot.armLeft.setPosition(0.5);
+                robot.armRight.setPosition(0.9);
+                robot.armLeft.setPosition(0.1);
                 telemetry.addData("Collection Arm Status", "Moving Down");
+                telemetry.update();
             }
             else if (gamepad2.right_bumper) {
-                robot.armLeft.setPosition(0);
-                robot.armRight.setPosition(0);
+                robot.armRight.setPosition(0.1);
+                robot.armLeft.setPosition(0.9);
                 telemetry.addData("Collection Arm Status", "Moving Up");
+                telemetry.update();
             }
-            // Pause for metronome tick
+
+            telemetry.addData("Position - Conveyor Belt", robot.conveyorServo.getPosition());
+            telemetry.addData("Position - LeftArm", robot.armLeft.getPosition());
+            telemetry.addData("Position - RightArm", robot.armRight.getPosition());
+            telemetry.update();
+
             robot.waitForTick(0);
         }
     }

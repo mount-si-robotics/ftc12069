@@ -20,8 +20,8 @@ public class HardwareCataclysm
     public Servo armLeft = null;
     public Servo armRight = null;
 
-    public static final double FLICK_POWER = 0.5;
-    public static final double FLICK_POWER_REVERSE = -0.5;
+    public static final double FLICK_POWER = 1;
+    public static final double FLICK_POWER_REVERSE = -1;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -43,8 +43,6 @@ public class HardwareCataclysm
         LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         RBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
-        LBMotor.setPower(0);
-        RBMotor.setPower(0);
 
         // Set all motors to zero power
         LBMotor.setPower(0);
@@ -63,8 +61,6 @@ public class HardwareCataclysm
         armRight = hwMap.servo.get("armRight");
 
         conveyorServo.setPosition(0);
-        armLeft.setPosition(0);
-        armRight.setPosition(0);
     }
 
     public void waitForTick(long periodMs) {
