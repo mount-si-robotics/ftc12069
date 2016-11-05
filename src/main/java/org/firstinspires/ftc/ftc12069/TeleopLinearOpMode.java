@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Catacylsm Linear OpMode - WIP V3.5", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
@@ -48,7 +49,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double left;
         double right;
         double max;
-        double stop;
+        double conveyorServoPos;
+        double changeRate;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -56,6 +58,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
+        conveyorServoPos = 0;
         telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
 
@@ -76,7 +79,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-
             robot.LBMotor.setPower(-left);
             robot.RBMotor.setPower(-right);
 
@@ -84,16 +86,19 @@ public class TeleopLinearOpMode extends LinearOpMode {
             // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y) {
                 robot.flickMotor.setPower(robot.FLICK_POWER);
+
                 telemetry.addData("Arm Status", "Flick Motor: Forward");
                 telemetry.update();
             }
             else if (gamepad2.a) {
                 robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
+
                 telemetry.addData("Arm Status", "Flick Motor: Reverse");
                 telemetry.update();
             }
             else {
                 robot.flickMotor.setPower(0.0);
+
                 telemetry.addData("Arm Status", "Flick Motor: Stopped");
                 telemetry.update();
             }
@@ -102,33 +107,54 @@ public class TeleopLinearOpMode extends LinearOpMode {
             // Use gamepad2 d-pad to control conveyor belt direction
             // Add code to print postition to screen
             if (gamepad2.dpad_up) {
-                robot.conveyorServo.setPosition(1);
+                changeRate = (0.8);
+                conveyorServoPos = ((conveyorServoPos) + (changeRate));
+                conveyorServoPos = Range.clip(conveyorServoPos,0,1);
+                robot.conveyorServo.setPosition(conveyorServoPos);
+
                 telemetry.addData("Collection Status", "Conveyor: Forward");
                 telemetry.update();
             }
             else if (gamepad2.dpad_down) {
-                robot.conveyorServo.setPosition(0);
+                changeRate = (-0.8);
+                conveyorServoPos = ((conveyorServoPos) + (changeRate));
+                conveyorServoPos = Range.clip(conveyorServoPos,0,1);
+                robot.conveyorServo.setPosition(conveyorServoPos);
+
                 telemetry.addData("Collection Status", "Conveyor: Reverse");
                 telemetry.update();
             }
             else {
-                stop = robot.conveyorServo.getPosition();
-                robot.conveyorServo.setPosition(stop);
+                changeRate = (0);
+                conveyorServoPos = ((conveyorServoPos) + (changeRate));
+                conveyorServoPos = Range.clip(conveyorServoPos,0,1);
+                robot.conveyorServo.setPosition(conveyorServoPos);
+
                 telemetry.addData("Collection Status", "Conveyor Stopped");
                 telemetry.update();
             }
 
+
             // Use the bumpers to control the ball collection mechanism
             if (gamepad2.left_bumper) {
-                robot.armRight.setPosition(0.9);
                 robot.armLeft.setPosition(0.1);
+                robot.armRight.setPosition(0.9);
+
                 telemetry.addData("Collection Arm Status", "Moving Down");
                 telemetry.update();
             }
             else if (gamepad2.right_bumper) {
-                robot.armRight.setPosition(0.1);
                 robot.armLeft.setPosition(0.9);
+                robot.armRight.setPosition(0.1);
+
                 telemetry.addData("Collection Arm Status", "Moving Up");
+                telemetry.update();
+            }
+            else {
+                robot.armRight.setPosition(robot.armRight.getPosition());
+                robot.armLeft.setPosition(robot.armLeft.getPosition());
+
+                telemetry.addData("Collection Arm Status", "Stopped");
                 telemetry.update();
             }
 

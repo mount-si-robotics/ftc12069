@@ -61,6 +61,8 @@ public class HardwareCataclysm
         armRight = hwMap.servo.get("armRight");
 
         conveyorServo.setPosition(0);
+        armLeft.setPosition(0.5);
+        armRight.setPosition(0.5);
     }
 
     public void waitForTick(long periodMs) {
