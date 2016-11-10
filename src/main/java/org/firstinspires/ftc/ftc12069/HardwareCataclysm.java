@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.ftc12069;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,7 +16,9 @@ public class HardwareCataclysm
     public DcMotor LBMotor   = null;
     public DcMotor  RBMotor  = null;
     public DcMotor  flickMotor    = null;
-    public Servo conveyorBelt    = null;
+    public Servo conveyorServo = null;
+    public Servo armLeft = null;
+    public Servo armRight = null;
 
     public static final double FLICK_POWER = 1;
     public static final double FLICK_POWER_REVERSE = -1;
@@ -36,8 +39,10 @@ public class HardwareCataclysm
         LBMotor = hwMap.dcMotor.get("leftBackMotor");
         RBMotor = hwMap.dcMotor.get("rightBackMotor");
         flickMotor = hwMap.dcMotor.get("flickArm");
-        LBMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        RBMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+
+        LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        RBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        flickMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         LBMotor.setPower(0);
@@ -50,9 +55,14 @@ public class HardwareCataclysm
         RBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Define and initialize ALL installed servos.
-        conveyorBelt = hwMap.servo.get("conveyorServo");
-        conveyorBelt.setDirection(Servo.Direction.FORWARD);
+        // Define conveyor servos
+        conveyorServo = hwMap.servo.get("conveyorServo");
+        armLeft = hwMap.servo.get("armLeft");
+        armRight = hwMap.servo.get("armRight");
+
+        conveyorServo.setPosition(0);
+        armLeft.setPosition(0.5);
+        armRight.setPosition(0.5);
     }
 
     public void waitForTick(long periodMs) {
