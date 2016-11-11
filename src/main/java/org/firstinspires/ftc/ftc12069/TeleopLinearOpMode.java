@@ -107,29 +107,19 @@ public class TeleopLinearOpMode extends LinearOpMode {
             // Use gamepad2 d-pad to control conveyor belt direction
             // Add code to print postition to screen
             if (gamepad2.dpad_up) {
-                changeRate = (0.8);
-                conveyorServoPos = ((conveyorServoPos) + (changeRate));
-                conveyorServoPos = Range.clip(conveyorServoPos,0,1);
-                robot.conveyorServo.setPosition(conveyorServoPos);
+                robot.conveyorMotor.setPower(1);
 
                 telemetry.addData("Collection Status", "Conveyor: Forward");
                 telemetry.update();
             }
             else if (gamepad2.dpad_down) {
-                changeRate = (-0.8);
-                conveyorServoPos = ((conveyorServoPos) + (changeRate));
-                conveyorServoPos = Range.clip(conveyorServoPos,0,1);
-                robot.conveyorServo.setPosition(conveyorServoPos);
+                robot.conveyorMotor.setPower(-1);
 
                 telemetry.addData("Collection Status", "Conveyor: Reverse");
                 telemetry.update();
             }
             else {
-                changeRate = (0);
-                conveyorServoPos = ((conveyorServoPos) + (changeRate));
-                conveyorServoPos = Range.clip(conveyorServoPos,0,1);
-                robot.conveyorServo.setPosition(conveyorServoPos);
-
+                robot.conveyorMotor.setPower(0);
                 telemetry.addData("Collection Status", "Conveyor Stopped");
                 telemetry.update();
             }
@@ -137,32 +127,24 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Use the bumpers to control the ball collection mechanism
             if (gamepad2.left_bumper) {
-                robot.armLeft.setPosition(0.1);
-                robot.armRight.setPosition(0.9);
-
+                robot.collectionMotor.setPower(1);
                 telemetry.addData("Collection Arm Status", "Moving Down");
                 telemetry.update();
             }
             else if (gamepad2.right_bumper) {
-                robot.armLeft.setPosition(0.9);
-                robot.armRight.setPosition(0.1);
+                robot.collectionMotor.setPower(-1);
 
                 telemetry.addData("Collection Arm Status", "Moving Up");
                 telemetry.update();
             }
             else {
-                robot.armRight.setPosition(robot.armRight.getPosition());
-                robot.armLeft.setPosition(robot.armLeft.getPosition());
+                robot.collectionMotor.setPower(0);
 
                 telemetry.addData("Collection Arm Status", "Stopped");
                 telemetry.update();
             }
 
-            telemetry.addData("Position - Conveyor Belt", robot.conveyorServo.getPosition());
-            telemetry.addData("Position - LeftArm", robot.armLeft.getPosition());
-            telemetry.addData("Position - RightArm", robot.armRight.getPosition());
             telemetry.update();
-
             robot.waitForTick(0);
         }
     }
