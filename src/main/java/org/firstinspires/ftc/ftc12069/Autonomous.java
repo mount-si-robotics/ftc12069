@@ -113,7 +113,7 @@ public class Autonomous extends LinearOpMode {
 
     ////////////////////////// light sensor //////////////
 
-    OpticalDistanceSensor   lightSensor;   // Alternative MR ODS sensor
+    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
 
     static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
     static final double APPROACH_SPEED = 0.5;
@@ -153,7 +153,7 @@ public class Autonomous extends LinearOpMode {
         //}
     }
 
-
+    //used to drive to wall and use the beacon
     public void gyro(double distance, double angle, double holdTime) {
         /*
          * Initialize the standard drive system variables.
@@ -199,7 +199,7 @@ public class Autonomous extends LinearOpMode {
         // gyroDrive(DRIVE_SPEED, distance, 0.0);    // Drive FWD 48 inches
         gyroTurn(TURN_SPEED, angle);         // Turn  CCW to -45 Degrees
         gyroHold(TURN_SPEED, angle, holdTime);    // Hold -45 Deg heading for a 1/2 second
-        gyroDrive(DRIVE_SPEED, distance, 0.0);    // Drive FWD 48 inches
+        gyroDrive(DRIVE_SPEED, distance, 0.0, true);    // Drive FWD 48 inches
 
 
         /*telemetry.addData("Path", "Complete");
@@ -218,7 +218,9 @@ public class Autonomous extends LinearOpMode {
      *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                 If a relative angle is required, add/subtract from current heading.
      */
-    public void gyroDrive(double speed, double distance, double angle) {
+    //used to drive straight to wall and drive to center to release balls
+    public void gyroDrive(double speed, double distance, double angle, boolean beginning) {
+        //beginning is for code to drive straight to wall which is 1st step
 
         int newLeftTarget;
         int newRightTarget;
@@ -230,58 +232,55 @@ public class Autonomous extends LinearOpMode {
         double rightSpeed;
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
-        wall();
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
 
-            // Determine new target position, and pass to motor controller
-            moveCounts = (int) (distance * COUNTS_PER_INCH);
-            newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
-            newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
+        while (wallDetection(1.0) == false) {
+            // Ensure that the opmode is still active
+            if (opModeIsActive()) {
 
-            // Set Target and Turn On RUN_TO_POSITION
-            robot.LBMotor.setTargetPosition(newLeftTarget);
-            robot.RBMotor.setTargetPosition(newRightTarget);
+                // Determine new target position, and pass to motor controller
+                moveCounts = (int) (distance * COUNTS_PER_INCH);
+                newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
+                newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
 
-            robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // Set Target and Turn On RUN_TO_POSITION
+                robot.LBMotor.setTargetPosition(newLeftTarget);
+                robot.RBMotor.setTargetPosition(newRightTarget);
 
-            // start motion.
-            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            robot.LBMotor.setPower(speed);
-            robot.RBMotor.setPower(speed);
+                robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            wall();
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
+                // start motion.
+                speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                robot.LBMotor.setPower(speed);
+                robot.RBMotor.setPower(speed);
 
-                // adjust relative speed based on heading error.
-                error = getError(angle);
-                steer = getSteer(error, P_DRIVE_COEFF);
+                // keep looping while we are still active, and BOTH motors are running.
+                while (opModeIsActive() &&
+                        (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
 
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    steer *= -1.0;
+                    // adjust relative speed based on heading error.
+                    error = getError(angle);
+                    steer = getSteer(error, P_DRIVE_COEFF);
 
-                leftSpeed = speed - steer;
-                rightSpeed = speed + steer;
+                    // if driving in reverse, the motor correction also needs to be reversed
+                    if (distance < 0)
+                        steer *= -1.0;
 
-                // Normalize speeds if any one exceeds +/- 1.0;
-                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-                if (max > 1.0) {
-                    leftSpeed /= max;
-                    rightSpeed /= max;
+                    leftSpeed = speed - steer;
+                    rightSpeed = speed + steer;
+
+                    // Normalize speeds if any one exceeds +/- 1.0;
+                    max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                    if (max > 1.0) {
+                        leftSpeed /= max;
+                        rightSpeed /= max;
+                    }
+
+                    robot.LBMotor.setPower(leftSpeed);
+                    robot.RBMotor.setPower(rightSpeed);
                 }
 
-                robot.LBMotor.setPower(leftSpeed);
-                robot.RBMotor.setPower(rightSpeed);
-
-                wall();
-
-
             }
-            wall();
 
             /*// Stop all motion;
             robot.LBMotor.setPower(0);
@@ -292,9 +291,10 @@ public class Autonomous extends LinearOpMode {
             robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
-
         }
-
+        if (beginning == true) {
+            line();
+        }
     }
 
     /**
@@ -416,17 +416,21 @@ public class Autonomous extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-   //////////////////////////////
+    //////////////////////////////
 
-    public void wall() {
+    //used to detect wall and detect when to stop robot to use beacon
+    public boolean wallDetection(double distance) {
+        boolean detection;
+
         double reflectance = opticalDistanceSensor.getLightDetected();
-        if (reflectance <= 1.0 && reflectance > 0.5){
-            line();
+        if (reflectance <= distance) {
+            detection = true;
+        } else {
+            detection = false;
         }
-        else {
-            gyroDrive(DRIVE_SPEED, distance1, 0.0);
-        }
+        return detection;
     }
+
 
     public void line() {
         double reflectance = opticalDistanceSensor.getLightDetected();
@@ -435,46 +439,41 @@ public class Autonomous extends LinearOpMode {
 
         // run until the white line is seen OR the driver presses STOP;
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+            while (wallDetection(0.189) == false) {
 
-            // Display the light level while we are looking for the line
-            telemetry.addData("Light Level", lightSensor.getLightDetected());
-            telemetry.update();
+                // Display the light level while we are looking for the line
+                telemetry.addData("Light Level", lightSensor.getLightDetected());
+                telemetry.update();
 
-            if (lightSensor.getLightDetected() < WHITE_THRESHOLD) {
-                robot.LBMotor.setPower(0.0);
-                robot.RBMotor.setPower(0.2);
-            } else
-                robot.LBMotor.setPower(0.2);
-            robot.RBMotor.setPower(0.0);
-
-            if (reflectance < 0.189) {
-                // Stop all motion;
-                robot.LBMotor.setPower(0);
-                robot.RBMotor.setPower(0);
-
-                // Turn off RUN_TO_POSITION
-                robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                beacon();
-            } else {
-                gyroDrive(DRIVE_SPEED, distance1, 0.0);
+                if (lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+                    robot.LBMotor.setPower(0.0);
+                    robot.RBMotor.setPower(0.2);
+                } else
+                    robot.LBMotor.setPower(0.2);
+                robot.RBMotor.setPower(0.0);
             }
+
+            robot.LBMotor.setPower(0);
+            robot.RBMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            beacon();
         }
-
     }
-
 
 
     public void beacon() {
 
-        if(colorSensor.red() > 5) {
+        if (colorSensor.red() > 5) {
             robot.LBMotor.setTargetPosition(10);
             robot.RBMotor.setTargetPosition(0);
             robot.LBMotor.setPower(0.5);
             robot.RBMotor.setPower(0);
 
-            sleep(2000);
+            sleep(100);
 
             robot.LBMotor.setTargetPosition(0);
             robot.RBMotor.setTargetPosition(0);
@@ -488,7 +487,7 @@ public class Autonomous extends LinearOpMode {
             robot.LBMotor.setPower(0);
             robot.RBMotor.setPower(0.5);
 
-            sleep(2000);
+            sleep(100);
 
             robot.LBMotor.setTargetPosition(0);
             robot.RBMotor.setTargetPosition(0);
