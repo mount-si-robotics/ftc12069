@@ -228,7 +228,7 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
 
-        while (wallDetection(1.0) == false) {
+        while (wallDetection(15.0) == false) {
             // Ensure that the opmode is still active
             if (opModeIsActive()) {
 
@@ -244,7 +244,7 @@ public class AutonomousFlicklauncher extends LinearOpMode {
                 robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                // start motion.
+                // start motion
                 speed = Range.clip(Math.abs(speed), 0.0, 1.0);
                 robot.LBMotor.setPower(speed);
                 robot.RBMotor.setPower(speed);
@@ -334,10 +334,10 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         return detection;
     }
 
-
     public void ballLauncher(){
         robot.flickMotor.setPower(robot.FLICK_POWER);
         sleep(500);
+        robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
         //robot.flickMotor.setPower(robot.FLICK_POWER);
 
     }

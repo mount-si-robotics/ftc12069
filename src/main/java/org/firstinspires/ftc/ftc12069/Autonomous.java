@@ -129,7 +129,7 @@ public class Autonomous extends LinearOpMode {
     double distance1;
 
     ///////////////////////// Time ///////////////////////////
-    private ElapsedTime runtime = new ElapsedTime();
+    //private ElapsedTime runtime = new ElapsedTime();
     ////////////////////////////////////////////
 
     @Override
@@ -153,7 +153,7 @@ public class Autonomous extends LinearOpMode {
         //}
     }
 
-    //used to drive to wall and use the beacon
+    //used to drive to wall and use the beacon - gives orders to use gyroDrive, gyroTurn, and gyroHold class
     public void gyro(double distance, double angle, double holdTime, boolean beginning) {
         /*
          * Initialize the standard drive system variables.
@@ -233,7 +233,7 @@ public class Autonomous extends LinearOpMode {
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
 
-        while (wallDetection(1.0) == false) {
+        while (wallDetection(15.0) == false) {
             // Ensure that the opmode is still active
             if (opModeIsActive()) {
 
@@ -311,6 +311,7 @@ public class Autonomous extends LinearOpMode {
      *              0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *              If a relative angle is required, add/subtract from current heading.
      */
+    //turn robot to certain angle
     public void gyroTurn(double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
@@ -434,15 +435,16 @@ public class Autonomous extends LinearOpMode {
         return detection;
     }
 
-
+    //sense line and remain driving on line
     public void line() {
-        double reflectance = opticalDistanceSensor.getLightDetected();
+        //double reflectance = opticalDistanceSensor.getLightDetected();
         robot.LBMotor.setPower(APPROACH_SPEED);
         robot.RBMotor.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
-            while (wallDetection(0.189) == false) {
+            //run til robot is 1 cm away
+            while (wallDetection(4.0) == false) {
 
                 // Display the light level while we are looking for the line
                 telemetry.addData("Light Level", lightSensor.getLightDetected());
@@ -467,7 +469,7 @@ public class Autonomous extends LinearOpMode {
         }
     }
 
-
+    //sense color of beacon and press button
     public void beacon() {
 
         if (colorSensor.red() > 5) {
@@ -499,13 +501,15 @@ public class Autonomous extends LinearOpMode {
 
             sleep(500);
         }
-        gyro(600, -90.0, 0.5, false);
+        gyroDrive(DRIVE_SPEED, 60.0, 0.0, false);
     }
 
+    //release balls in center
     public void ballLauncher(){
         robot.flickMotor.setPower(robot.FLICK_POWER);
         sleep(500);
-        robot.flickMotor.setPower(robot.FLICK_POWER);
+        robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
+        //robot.flickMotor.setPower(robot.FLICK_POWER);
 
     }
 }
