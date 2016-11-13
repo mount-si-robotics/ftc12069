@@ -16,9 +16,8 @@ public class HardwareCataclysm
     public DcMotor LBMotor   = null;
     public DcMotor  RBMotor  = null;
     public DcMotor  flickMotor    = null;
-    public Servo conveyorServo = null;
-    public Servo armLeft = null;
-    public Servo armRight = null;
+    public DcMotor conveyorMotor = null;
+    public DcMotor collectionMotor = null;
 
     public static final double FLICK_POWER = 1;
     public static final double FLICK_POWER_REVERSE = -1;
@@ -48,21 +47,18 @@ public class HardwareCataclysm
         LBMotor.setPower(0);
         RBMotor.setPower(0);
         flickMotor.setPower(0);
+        conveyorMotor.setPower(0);
+        collectionMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         LBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        conveyorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        collectionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Define conveyor servos
-        conveyorServo = hwMap.servo.get("conveyorServo");
-        armLeft = hwMap.servo.get("armLeft");
-        armRight = hwMap.servo.get("armRight");
 
-        conveyorServo.setPosition(0);
-        armLeft.setPosition(0.5);
-        armRight.setPosition(0.5);
     }
 
     public void waitForTick(long periodMs) {
