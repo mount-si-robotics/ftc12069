@@ -96,7 +96,7 @@ public class Autonomous extends LinearOpMode {
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For fi guring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
@@ -142,7 +142,7 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart(); //wait for driver to press play
         distance1 = 60.0;
-        gyro(distance1, -45.0, 0.5);
+        gyro(distance1, -45.0, 0.5, true);
         //gyro(distance, angle, holdTime)
 
         //////////////////////////////////
@@ -154,7 +154,7 @@ public class Autonomous extends LinearOpMode {
     }
 
     //used to drive to wall and use the beacon
-    public void gyro(double distance, double angle, double holdTime) {
+    public void gyro(double distance, double angle, double holdTime, boolean beginning) {
         /*
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
@@ -294,6 +294,9 @@ public class Autonomous extends LinearOpMode {
         }
         if (beginning == true) {
             line();
+        }
+        else{
+            ballLauncher();
         }
     }
 
@@ -496,6 +499,13 @@ public class Autonomous extends LinearOpMode {
 
             sleep(500);
         }
+        gyro(600, -90.0, 0.5, false);
     }
 
+    public void ballLauncher(){
+        robot.flickMotor.setPower(robot.FLICK_POWER);
+        sleep(500);
+        robot.flickMotor.setPower(robot.FLICK_POWER);
+
+    }
 }
