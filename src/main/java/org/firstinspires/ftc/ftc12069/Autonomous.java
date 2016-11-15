@@ -83,6 +83,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 * runs gyro to turn right 45 degrees
 * use optical distance sensor
 * use color sensor
+* press beacon button
+* drive straight towards center and launch balls
+* push ball off center and park in landing spot
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro", group = "Pushbot")
@@ -128,9 +131,6 @@ public class Autonomous extends LinearOpMode {
     ///////////////////////////////////////////////////////////////
     double distance1;
 
-    ///////////////////////// Time ///////////////////////////
-    //private ElapsedTime runtime = new ElapsedTime();
-    ////////////////////////////////////////////
 
     @Override
     public void runOpMode() {
@@ -142,19 +142,13 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart(); //wait for driver to press play
         distance1 = 60.0;
-        gyro(distance1, -45.0, 0.5, true);
+        gyro(distance1, -45.0, 0.5, true, false);
         //gyro(distance, angle, holdTime)
 
-        //////////////////////////////////
-        // while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
-        // Display the light level while we are looking for the line
-        //telemetry.addData("Light Level", lightSensor.getLightDetected());
-        //  telemetry.update();
-        //}
     }
 
     //used to drive to wall and use the beacon - gives orders to use gyroDrive, gyroTurn, and gyroHold class
-    public void gyro(double distance, double angle, double holdTime, boolean beginning) {
+    public void gyro(double distance, double angle, double holdTime, boolean beginning, boolean ending) {
         /*
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
@@ -199,7 +193,7 @@ public class Autonomous extends LinearOpMode {
         // gyroDrive(DRIVE_SPEED, distance, 0.0);    // Drive FWD 48 inches
         gyroTurn(TURN_SPEED, angle);         // Turn  CCW to -45 Degrees
         gyroHold(TURN_SPEED, angle, holdTime);    // Hold -45 Deg heading for a 1/2 second
-        gyroDrive(DRIVE_SPEED, distance, 0.0, true);    // Drive FWD 48 inches
+        gyroDrive(DRIVE_SPEED, distance, 0.0, beginning, ending);    // Drive FWD 48 inches
 
 
         /*telemetry.addData("Path", "Complete");
@@ -219,7 +213,7 @@ public class Autonomous extends LinearOpMode {
      *                 If a relative angle is required, add/subtract from current heading.
      */
     //used to drive straight to wall and drive to center to release balls
-    public void gyroDrive(double speed, double distance, double angle, boolean beginning) {
+    public void gyroDrive(double speed, double distance, double angle, boolean beginning, boolean ending) {
         //beginning is for code to drive straight to wall which is 1st step
 
         int newLeftTarget;
@@ -232,7 +226,7 @@ public class Autonomous extends LinearOpMode {
         double rightSpeed;
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
-
+        if(beginning == true){
         while (wallDetection(15.0) == false) {
             // Ensure that the opmode is still active
             if (opModeIsActive()) {
@@ -282,22 +276,65 @@ public class Autonomous extends LinearOpMode {
 
             }
 
-            /*// Stop all motion;
-            robot.LBMotor.setPower(0);
-            robot.RBMotor.setPower(0);
-            */
-
-            /*// Turn off RUN_TO_POSITION
-            robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
-
         }
-        if (beginning == true) {
             line();
         }
+
         else{
-            ballLauncher();
+            if (opModeIsActive()) {
+                // Determine new target position, and pass to motor controller
+                moveCounts = (int) (distance * COUNTS_PER_INCH);
+                newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
+                newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
+
+                // Set Target and Turn On RUN_TO_POSITION
+                robot.LBMotor.setTargetPosition(newLeftTarget);
+                robot.RBMotor.setTargetPosition(newRightTarget);
+
+                robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // start motion.
+                speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                robot.LBMotor.setPower(speed);
+                robot.RBMotor.setPower(speed);
+
+                // keep looping while we are still active, and BOTH motors are running.
+                while (opModeIsActive() &&
+                        (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
+
+                    // adjust relative speed based on heading error.
+                    error = getError(angle);
+                    steer = getSteer(error, P_DRIVE_COEFF);
+
+                    // if driving in reverse, the motor correction also needs to be reversed
+                    if (distance < 0)
+                        steer *= -1.0;
+
+                    leftSpeed = speed - steer;
+                    rightSpeed = speed + steer;
+
+                    // Normalize speeds if any one exceeds +/- 1.0;
+                    max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                    if (max > 1.0) {
+                        leftSpeed /= max;
+                        rightSpeed /= max;
+                    }
+
+                    robot.LBMotor.setPower(leftSpeed);
+                    robot.RBMotor.setPower(rightSpeed);
+                }
+
+            }
+            if(ending == true){
+                robot.LBMotor.setPower(0);
+                robot.RBMotor.setPower(0);
+            }
+            else if(ending == false && beginning == false){
+                ballLauncher();
+            }
         }
+
     }
 
     /**
@@ -444,7 +481,7 @@ public class Autonomous extends LinearOpMode {
         // run until the white line is seen OR the driver presses STOP;
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
             //run til robot is 1 cm away
-            while (wallDetection(4.0) == false) {
+            while (wallDetection(10.0) == false) {
 
                 // Display the light level while we are looking for the line
                 telemetry.addData("Light Level", lightSensor.getLightDetected());
@@ -501,7 +538,7 @@ public class Autonomous extends LinearOpMode {
 
             sleep(500);
         }
-        gyroDrive(DRIVE_SPEED, 60.0, 0.0, false);
+        gyroDrive(DRIVE_SPEED, 60.0, 0.0, false, false);
     }
 
     //release balls in center
@@ -510,6 +547,6 @@ public class Autonomous extends LinearOpMode {
         sleep(500);
         robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
         //robot.flickMotor.setPower(robot.FLICK_POWER);
-
+        gyroDrive(DRIVE_SPEED, 20.0, 0.0, false, true);
     }
 }

@@ -80,9 +80,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 /*
-* runs gyro to turn right 45 degrees
-* use optical distance sensor
-* use color sensor
+* drives straight to center to launch balls and parks in center landing spot
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro", group = "Pushbot")
@@ -107,15 +105,6 @@ public class AutonomousFlicklauncher extends LinearOpMode {
     static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
     //////////////////////////////////////////////////////////////
 
-
-    ////////////////////////// light sensor //////////////
-
-    /*OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
-
-    static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    static final double APPROACH_SPEED = 0.5;*/
-    ////////////////////////////////////////////////////
-
     /////////////////////// color sensor ///////////////////
     ColorSensor colorSensor;    // Hardware Device Object
     /////////////////////////////////////////////////////////
@@ -123,11 +112,6 @@ public class AutonomousFlicklauncher extends LinearOpMode {
     //////////////////////// Distance From Wall ///////////////////
     OpticalDistanceSensor opticalDistanceSensor;  // Hardware Device Object
     ///////////////////////////////////////////////////////////////
-    double distance1;
-
-    ///////////////////////// Time ///////////////////////////
-    private ElapsedTime runtime = new ElapsedTime();
-    ////////////////////////////////////////////
 
     @Override
     public void runOpMode() {
@@ -138,19 +122,13 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         colorSensor.enableLed(true);
 
         waitForStart(); //wait for driver to press play
-        gyro(60.0);
+        gyro(60.0, false);
         //gyro(distance, angle, holdTime)
 
-        //////////////////////////////////
-        // while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
-        // Display the light level while we are looking for the line
-        //telemetry.addData("Light Level", lightSensor.getLightDetected());
-        //  telemetry.update();
-        //}
     }
 
     //used to drive to wall and use the beacon
-    public void gyro(double distance) {
+    public void gyro(double distance, boolean ending) {
         /*
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
@@ -192,13 +170,9 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
 
-        // gyroDrive(DRIVE_SPEED, distance, 0.0);    // Drive FWD 48 inches
-
-        gyroDrive(DRIVE_SPEED, distance, 0.0);    // Drive FWD 48 inches
+        gyroDrive(DRIVE_SPEED, distance, 0.0, ending);    // Drive FWD 48 inches
 
 
-        /*telemetry.addData("Path", "Complete");
-        telemetry.update();*/
     }
 
     /**
@@ -214,7 +188,7 @@ public class AutonomousFlicklauncher extends LinearOpMode {
      *                 If a relative angle is required, add/subtract from current heading.
      */
     //used to drive straight to wall and drive to center to release balls
-    public void gyroDrive(double speed, double distance, double angle) {
+    public void gyroDrive(double speed, double distance, double angle, boolean ending) {
         //beginning is for code to drive straight to wall which is 1st step
 
         int newLeftTarget;
@@ -228,7 +202,6 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
 
-        while (wallDetection(15.0) == false) {
             // Ensure that the opmode is still active
             if (opModeIsActive()) {
 
@@ -274,20 +247,14 @@ public class AutonomousFlicklauncher extends LinearOpMode {
                     robot.LBMotor.setPower(leftSpeed);
                     robot.RBMotor.setPower(rightSpeed);
                 }
-                ballLauncher();
-
+                if (ending == true) {
+                    robot.LBMotor.setPower(0);
+                    robot.RBMotor.setPower(0);
+                }
+                else {
+                    ballLauncher();
+                }
             }
-
-            /*// Stop all motion;
-            robot.LBMotor.setPower(0);
-            robot.RBMotor.setPower(0);
-            */
-
-            /*// Turn off RUN_TO_POSITION
-            robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
-
-        }
     }
 
     /**
@@ -322,7 +289,7 @@ public class AutonomousFlicklauncher extends LinearOpMode {
     //////////////////////////////
 
     //used to detect wall and detect when to stop robot to use beacon
-    public boolean wallDetection(double distance) {
+    /*public boolean wallDetection(double distance) {
         boolean detection;
 
         double reflectance = opticalDistanceSensor.getLightDetected();
@@ -332,13 +299,13 @@ public class AutonomousFlicklauncher extends LinearOpMode {
             detection = false;
         }
         return detection;
-    }
+    }*/
 
     public void ballLauncher(){
         robot.flickMotor.setPower(robot.FLICK_POWER);
         sleep(500);
         robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
         //robot.flickMotor.setPower(robot.FLICK_POWER);
-
+        gyro(20.0, true);
     }
 }
