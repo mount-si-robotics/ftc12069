@@ -105,21 +105,10 @@ public class AutonomousFlicklauncher extends LinearOpMode {
     static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
     //////////////////////////////////////////////////////////////
 
-    /////////////////////// color sensor ///////////////////
-    ColorSensor colorSensor;    // Hardware Device Object
-    /////////////////////////////////////////////////////////
-
-    //////////////////////// Distance From Wall ///////////////////
-    OpticalDistanceSensor opticalDistanceSensor;  // Hardware Device Object
-    ///////////////////////////////////////////////////////////////
 
     @Override
     public void runOpMode() {
-        // get a reference to our ColorSensor object.
-        colorSensor = hardwareMap.colorSensor.get("sensor_color");
 
-        // Set the LED in the beginning
-        colorSensor.enableLed(true);
 
         waitForStart(); //wait for driver to press play
         gyro(60.0, false);
@@ -199,8 +188,6 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         double steer;
         double leftSpeed;
         double rightSpeed;
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
-
 
             // Ensure that the opmode is still active
             if (opModeIsActive()) {
