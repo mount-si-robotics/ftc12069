@@ -30,21 +30,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.ftc12069;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -189,59 +183,58 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         double leftSpeed;
         double rightSpeed;
 
-            // Ensure that the opmode is still active
-            if (opModeIsActive()) {
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
 
-                // Determine new target position, and pass to motor controller
-                moveCounts = (int) (distance * COUNTS_PER_INCH);
-                newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
-                newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int) (distance * COUNTS_PER_INCH);
+            newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
+            newRightTarget = robot.RBMotor.getCurrentPosition() + moveCounts;
 
-                // Set Target and Turn On RUN_TO_POSITION
-                robot.LBMotor.setTargetPosition(newLeftTarget);
-                robot.RBMotor.setTargetPosition(newRightTarget);
+            // Set Target and Turn On RUN_TO_POSITION
+            robot.LBMotor.setTargetPosition(newLeftTarget);
+            robot.RBMotor.setTargetPosition(newRightTarget);
 
-                robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                // start motion
-                speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-                robot.LBMotor.setPower(speed);
-                robot.RBMotor.setPower(speed);
+            // start motion
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            robot.LBMotor.setPower(speed);
+            robot.RBMotor.setPower(speed);
 
-                // keep looping while we are still active, and BOTH motors are running.
-                while (opModeIsActive() &&
-                        (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() &&
+                    (robot.LBMotor.isBusy() && robot.RBMotor.isBusy())) {
 
-                    // adjust relative speed based on heading error.
-                    error = getError(angle);
-                    steer = getSteer(error, P_DRIVE_COEFF);
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
 
-                    // if driving in reverse, the motor correction also needs to be reversed
-                    if (distance < 0)
-                        steer *= -1.0;
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
 
-                    leftSpeed = speed - steer;
-                    rightSpeed = speed + steer;
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
 
-                    // Normalize speeds if any one exceeds +/- 1.0;
-                    max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-                    if (max > 1.0) {
-                        leftSpeed /= max;
-                        rightSpeed /= max;
-                    }
-
-                    robot.LBMotor.setPower(leftSpeed);
-                    robot.RBMotor.setPower(rightSpeed);
+                // Normalize speeds if any one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0) {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
                 }
-                if (ending == true) {
-                    robot.LBMotor.setPower(0);
-                    robot.RBMotor.setPower(0);
-                }
-                else {
-                    ballLauncher();
-                }
+
+                robot.LBMotor.setPower(leftSpeed);
+                robot.RBMotor.setPower(rightSpeed);
             }
+            if (ending == true) {
+                robot.LBMotor.setPower(0);
+                robot.RBMotor.setPower(0);
+            } else {
+                ballLauncher();
+            }
+        }
     }
 
     /**
@@ -273,22 +266,8 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    //////////////////////////////
 
-    //used to detect wall and detect when to stop robot to use beacon
-    /*public boolean wallDetection(double distance) {
-        boolean detection;
-
-        double reflectance = opticalDistanceSensor.getLightDetected();
-        if (reflectance <= distance) {
-            detection = true;
-        } else {
-            detection = false;
-        }
-        return detection;
-    }*/
-
-    public void ballLauncher(){
+    public void ballLauncher() {
         robot.flickMotor.setPower(robot.FLICK_POWER);
         sleep(500);
         robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
