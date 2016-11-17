@@ -35,13 +35,17 @@ public class HardwareCataclysm
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        LBMotor = hwMap.dcMotor.get("leftBackMotor");
-        RBMotor = hwMap.dcMotor.get("rightBackMotor");
-        flickMotor = hwMap.dcMotor.get("flickArm");
+        LBMotor = hwMap.dcMotor.get("LBMotor");
+        RBMotor = hwMap.dcMotor.get("RBMotor");
+        flickMotor = hwMap.dcMotor.get("flickarm");
+        conveyorMotor = hwMap.dcMotor.get("conveyor");
+        collectionMotor = hwMap.dcMotor.get("collection");
 
         LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         RBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
+        conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
+        collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all motors to zero power
         LBMotor.setPower(0);
