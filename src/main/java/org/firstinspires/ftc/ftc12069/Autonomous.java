@@ -88,7 +88,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 * push ball off center and park in landing spot
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro", group = "Pushbot")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro 2", group = "Pushbot")
 //@Disabled
 public class Autonomous extends LinearOpMode {
 
