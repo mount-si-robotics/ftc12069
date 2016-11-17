@@ -77,7 +77,7 @@ import com.qualcomm.robotcore.util.Range;
 * drives straight to center to launch balls and parks in center landing spot
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro", group = "Pushbot")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto drive to center", group = "Pushbot")
 //@Disabled
 public class AutonomousFlicklauncher extends LinearOpMode {
 
