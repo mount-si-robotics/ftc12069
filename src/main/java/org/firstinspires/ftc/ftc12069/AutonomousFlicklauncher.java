@@ -270,8 +270,7 @@ public class AutonomousFlicklauncher extends LinearOpMode {
     public void ballLauncher() {
         robot.flickMotor.setPower(robot.FLICK_POWER);
         sleep(500);
-        robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
-        //robot.flickMotor.setPower(robot.FLICK_POWER);
-        gyro(20.0, true);
+
+        gyro(5.0, true);
     }
 }
