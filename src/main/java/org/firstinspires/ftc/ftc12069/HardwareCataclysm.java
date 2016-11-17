@@ -19,9 +19,6 @@ public class HardwareCataclysm
     public DcMotor conveyorMotor = null;
     public DcMotor collectionMotor = null;
 
-    public static final double FLICK_POWER = 1;
-    public static final double FLICK_POWER_REVERSE = -1;
-
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();

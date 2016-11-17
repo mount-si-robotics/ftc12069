@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Catacylsm Linear OpMode - WIP V5", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode - V6", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -82,10 +82,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y) {
-                robot.flickMotor.setPower(robot.FLICK_POWER);
+                robot.flickMotor.setPower(1);
             }
             else if (gamepad2.a) {
-                robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
+                robot.flickMotor.setPower(-1);
             }
             else {
                 robot.flickMotor.setPower(0.0);
@@ -95,10 +95,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
             // Use gamepad2 d-pad to control conveyor belt direction
             // Add code to print postition to screen
             if (gamepad2.dpad_up) {
-                robot.conveyorMotor.setPower(1);
+                robot.conveyorMotor.setPower(-0.13);
             }
             else if (gamepad2.dpad_down) {
-                robot.conveyorMotor.setPower(-1);
+                robot.conveyorMotor.setPower(0.13);
             }
             else {
                 robot.conveyorMotor.setPower(0);
