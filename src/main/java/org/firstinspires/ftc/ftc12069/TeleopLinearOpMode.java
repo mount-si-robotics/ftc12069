@@ -66,8 +66,8 @@ public class TeleopLinearOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank drive mode
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            left = Math.log(gamepad1.left_stick_y);
+            right = Math.log(gamepad1.right_stick_y);
 
             // Normalize the values so neither exceed +/- 100
             max = Math.max(Math.abs(left), Math.abs(right));
@@ -76,8 +76,9 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-            robot.LBMotor.setPower(-left);
-            robot.RBMotor.setPower(-right);
+
+            robot.LBMotor.setPower(left);
+            robot.RBMotor.setPower(right);
 
 
             // Use gamepad2 y and a buttons to control flick arm
@@ -93,7 +94,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
 
             // Use gamepad2 d-pad to control conveyor belt direction
-            // Add code to print postition to screen
             if (gamepad2.dpad_up) {
                 robot.conveyorMotor.setPower(-0.13);
             }
@@ -115,7 +115,6 @@ public class TeleopLinearOpMode extends LinearOpMode {
             else {
                 robot.collectionMotor.setPower(0);
             }
-
 
 
             telemetry.update();

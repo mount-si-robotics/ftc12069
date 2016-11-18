@@ -38,8 +38,8 @@ public class HardwareCataclysm
         conveyorMotor = hwMap.dcMotor.get("conveyor");
         collectionMotor = hwMap.dcMotor.get("collection");
 
-        LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        RBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        LBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
         conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
         collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
