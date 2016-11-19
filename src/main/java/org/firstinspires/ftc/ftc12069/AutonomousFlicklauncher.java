@@ -107,8 +107,8 @@ public class AutonomousFlicklauncher extends LinearOpMode {
 
     public void DriveForward(double time) {
         // Step 1:  Drive forward for 3 seconds
-        robot.LBMotor.setPower(-FORWARD_SPEED);
-        robot.RBMotor.setPower(- FORWARD_SPEED);
+        robot.LBMotor.setPower(FORWARD_SPEED);
+        robot.RBMotor.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < time)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
