@@ -31,13 +31,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.ftc12069;
 
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -85,6 +83,12 @@ public class AutonomousFlicklauncher extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot.init(hardwareMap);
+        robot.LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart(); //wait for driver to press play
         DriveForward(1000);
