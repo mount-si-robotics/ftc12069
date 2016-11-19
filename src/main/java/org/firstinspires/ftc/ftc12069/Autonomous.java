@@ -543,9 +543,9 @@ public class Autonomous extends LinearOpMode {
 
     //release balls in center
     public void ballLauncher(){
-        robot.flickMotor.setPower(robot.FLICK_POWER);
+        robot.flickMotor.setPower(1);
         sleep(500);
-        robot.flickMotor.setPower(robot.FLICK_POWER_REVERSE);
+        robot.flickMotor.setPower(-1);
         //robot.flickMotor.setPower(robot.FLICK_POWER);
         gyroDrive(DRIVE_SPEED, 20.0, 0.0, false, true);
     }
