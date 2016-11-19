@@ -35,6 +35,7 @@ package org.firstinspires.ftc.ftc12069;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 
@@ -81,53 +82,37 @@ public class AutonomousFlicklauncher extends LinearOpMode {
 
     HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware
 
+    private ElapsedTime runtime = new ElapsedTime();
+
+
+    static final double     FORWARD_SPEED = 0.6;
+
+
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         waitForStart(); //wait for driver to press play
-        DriveForward(1000);
+        DriveForward(1.5);
+        robot.LBMotor.setPower(0);
+        robot.RBMotor.setPower(0);
         ballLauncher();
-        DriveForward(40);
+        DriveForward(0.5);
+        robot.LBMotor.setPower(0);
+        robot.RBMotor.setPower(0);
         stop();
     }
 
-    public void DriveForward(int distance) {
-        robot.LBMotor.setTargetPosition(distance);
-        robot.RBMotor.setTargetPosition(distance);
-
-        // set both motors to 25% power. Movement will start.
-
-        robot.LBMotor.setPower(30);
-        robot.RBMotor.setPower(30);
-
-        // wait while opmode is active and left motor is busy running to position.
-
-        while (opModeIsActive() && robot.LBMotor.isBusy())   //.getCurrentPosition() > leftMotor.getTargetPosition())
-        {
-            telemetry.addData("encoder-fwd", robot.LBMotor.getCurrentPosition() + "  busy=" + robot.LBMotor.isBusy());
+    public void DriveForward(double time) {
+        // Step 1:  Drive forward for 3 seconds
+        robot.LBMotor.setPower(-FORWARD_SPEED);
+        robot.RBMotor.setPower(- FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < time)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();
-        }
-
-        // set motor power to zero to stop motors.
-
-        robot.LBMotor.setPower(0.0);
-        robot.RBMotor.setPower(0.0);
-
-        // wait 5 sec to you can observe the final encoder position.
-
-        resetStartTime();
-
-        while (opModeIsActive() && getRuntime() < 5) {
-            telemetry.addData("encoder-fwd-end", robot.LBMotor.getCurrentPosition() + "  busy=" + robot.LBMotor.isBusy());
-            telemetry.update();
-            idle();
         }
     }
 
