@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V10", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V12", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -50,10 +50,12 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double right;
         double max;
         double breaks;
+        double controll;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
+        controll = (1);
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
@@ -78,8 +80,15 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-            robot.LBMotor.setPower(left - breaks);
-            robot.RBMotor.setPower(right - breaks);
+            if (controll == 1){
+                robot.LBMotor.setPower(left - breaks);
+                robot.RBMotor.setPower(right - breaks);
+            }
+            else if (controll == 0) {
+                robot.LBMotor.setPower (-right + breaks);
+                robot.RBMotor.setPower (-left + breaks);
+            }
+
 
 
             // Use gamepad2 y and a buttons to control flick arm
@@ -117,6 +126,14 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 robot.collectionMotor.setPower(0);
             }
 
+
+            //change controll directions
+            if (gamepad1.y) {
+                controll = (1);
+            }
+            else if (gamepad1.a) {
+                controll = (0);
+            }
 
             telemetry.update();
             robot.waitForTick(0);
