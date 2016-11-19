@@ -93,13 +93,12 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         robot.init(hardwareMap);
 
 
-
         waitForStart(); //wait for driver to press play
-        DriveForward(1.25);
+        DriveForward(1.00);
         robot.LBMotor.setPower(0);
         robot.RBMotor.setPower(0);
         ballLauncher();
-        DriveForward(0.25);
+        DriveForward(0.75);
         robot.LBMotor.setPower(0);
         robot.RBMotor.setPower(0);
         stop();
