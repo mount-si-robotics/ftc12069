@@ -118,7 +118,7 @@ public class AutonomousFlicklauncher extends LinearOpMode {
 
 
     public void ballLauncher() {
-        robot.flickMotor.setPower(robot.FLICK_POWER);
+        robot.flickMotor.setPower(1);
         sleep(500);
     }
 
