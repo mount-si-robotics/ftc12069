@@ -39,11 +39,20 @@ public class HardwareCataclysm
         conveyorMotor = hwMap.dcMotor.get("conveyor");
         collectionMotor = hwMap.dcMotor.get("collection");
 
+        // Set run directions
         LBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
         conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
         collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        // Set stopped behaviors
+        LBMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RBMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flickMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        conveyorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        collectionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         // Set all motors to zero power
         LBMotor.setPower(0);

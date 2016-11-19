@@ -47,6 +47,8 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
         double right;
         double max;
         double breaks;
+        double conveyorPower;
+        double collectionPower;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -56,6 +58,8 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
+        conveyorPower = (0.13);
+        collectionPower = (0.5);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -93,10 +97,16 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
 
             // Use gamepad2 d-pad to control conveyor belt direction
             if (gamepad2.dpad_up) {
-                robot.conveyorMotor.setPower(-0.13);
+                robot.conveyorMotor.setPower(-conveyorPower);
             }
             else if (gamepad2.dpad_down) {
-                robot.conveyorMotor.setPower(0.13);
+                robot.conveyorMotor.setPower(conveyorPower);
+            }
+            else if (gamepad1.dpad_up) {
+                robot.conveyorMotor.setPower(-conveyorPower);
+            }
+            else if (gamepad1.dpad_down) {
+                robot.conveyorMotor.setPower(conveyorPower);
             }
             else {
                 robot.conveyorMotor.setPower(0);
@@ -105,16 +115,16 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
 
             // Use the bumpers on controller 1 ato control the ball collection mechanism
             if (gamepad2.left_bumper) {
-                robot.collectionMotor.setPower(0.5);
+                robot.collectionMotor.setPower(collectionPower);
             }
             else if (gamepad2.right_bumper) {
-                robot.collectionMotor.setPower(-0.5);
+                robot.collectionMotor.setPower(-collectionPower);
             }
             else if (gamepad1.left_bumper) {
-                robot.collectionMotor.setPower(-0.5);
+                robot.collectionMotor.setPower(-collectionPower);
             }
             else if (gamepad1.right_bumper){
-                robot.collectionMotor.setPower(0.5);
+                robot.collectionMotor.setPower(collectionPower);
             }
             else {
                 robot.collectionMotor.setPower(0);
