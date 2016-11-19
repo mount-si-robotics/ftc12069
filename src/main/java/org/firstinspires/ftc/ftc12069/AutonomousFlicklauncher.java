@@ -93,7 +93,6 @@ public class AutonomousFlicklauncher extends LinearOpMode {
         waitForStart(); //wait for driver to press play
         DriveForward(1000);
         ballLauncher();
-        ballLauncher();
         DriveForward(40);
         stop();
     }
