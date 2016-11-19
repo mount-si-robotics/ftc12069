@@ -34,12 +34,9 @@ package org.firstinspires.ftc.ftc12069;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V10", group = "Cataclysm Hardware OpModes")
-public class TeleopLinearOpMode extends LinearOpMode {
+@TeleOp(name = "Catacylsm Linear OpMode (Manjesh/Hari) - V2", group = "Cataclysm Hardware OpModes")
+public class TeleopLinearOpMode2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware map
@@ -82,11 +79,11 @@ public class TeleopLinearOpMode extends LinearOpMode {
             robot.RBMotor.setPower(right - breaks);
 
 
-            // Use gamepad2 y and a buttons to control flick arm
+            // Use gamepad2 y and b buttons to control flick arm
             if (gamepad2.y) {
                 robot.flickMotor.setPower(1);
             }
-            else if (gamepad2.a) {
+            else if (gamepad2.b) {
                 robot.flickMotor.setPower(-1);
             }
             else {
@@ -107,11 +104,17 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
 
             // Use the bumpers on controller 1 ato control the ball collection mechanism
-            if (gamepad1.left_bumper) {
+            if (gamepad2.left_bumper) {
                 robot.collectionMotor.setPower(0.5);
             }
-            else if (gamepad1.right_bumper) {
+            else if (gamepad2.right_bumper) {
                 robot.collectionMotor.setPower(-0.5);
+            }
+            else if (gamepad1.left_bumper) {
+                robot.collectionMotor.setPower(-0.5);
+            }
+            else if (gamepad1.right_bumper){
+                robot.collectionMotor.setPower(0.5);
             }
             else {
                 robot.collectionMotor.setPower(0);

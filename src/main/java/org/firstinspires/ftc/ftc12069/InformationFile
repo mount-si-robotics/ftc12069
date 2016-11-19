@@ -1,5 +1,8 @@
 InformationFile
-Working Teleop updated to newest layout V3
+Fully functional Teleop programs, OpMode 1 is for the Calvin/Beau drive team
+                                  OpMode 2 is for the Majesh/Hari drive team
 
-Last edit made - 16:07 16/11/17
-Submitted - 16:07 16/11/17
+Both OpModes include a trigger for power negation
+
+Last edit made - 16:07 16/11/18
+Submitted - 17:07 16/11/18
