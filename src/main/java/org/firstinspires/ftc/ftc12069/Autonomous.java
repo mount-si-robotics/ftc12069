@@ -30,16 +30,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.ftc12069;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
+//import android.app.Activity;
+//import android.graphics.Color;
+//import android.view.View;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LightSensor;
+//import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -87,8 +87,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 * drive straight towards center and launch balls
 * push ball off center and park in landing spot
  */
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro attempting", group = "Pushbot")
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro 2", group = "Pushbot")
 //@Disabled
 public class Autonomous extends LinearOpMode {
 
@@ -116,7 +116,7 @@ public class Autonomous extends LinearOpMode {
 
     ////////////////////////// light sensor //////////////
 
-    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
+   // OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
 
     static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
     static final double APPROACH_SPEED = 0.5;
@@ -127,7 +127,7 @@ public class Autonomous extends LinearOpMode {
     /////////////////////////////////////////////////////////
 
     //////////////////////// Distance From Wall ///////////////////
-    OpticalDistanceSensor opticalDistanceSensor;  // Hardware Device Object
+   // OpticalDistanceSensor opticalDistanceSensor;  // Hardware Device Object
     ///////////////////////////////////////////////////////////////
     double distance1;
 
@@ -135,7 +135,7 @@ public class Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         // get a reference to our ColorSensor object.
-        colorSensor = hardwareMap.colorSensor.get("sensor_color");
+        //colorSensor = hardwareMap.colorSensor.get("sensor_color");
 
         // Set the LED in the beginning
         colorSensor.enableLed(true);
@@ -224,10 +224,10 @@ public class Autonomous extends LinearOpMode {
         double steer;
         double leftSpeed;
         double rightSpeed;
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
+        //opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
 
         if(beginning == true){
-        while (wallDetection(15.0) == false) {
+       //while (wallDetection(15.0) == false) {
             // Ensure that the opmode is still active
             if (opModeIsActive()) {
 
@@ -276,7 +276,7 @@ public class Autonomous extends LinearOpMode {
 
             }
 
-        }
+        //}
             line();
         }
 
@@ -460,7 +460,7 @@ public class Autonomous extends LinearOpMode {
     //////////////////////////////
 
     //used to detect wall and detect when to stop robot to use beacon
-    public boolean wallDetection(double distance) {
+   /* public boolean wallDetection(double distance) {
         boolean detection;
 
         double reflectance = opticalDistanceSensor.getLightDetected();
@@ -470,7 +470,7 @@ public class Autonomous extends LinearOpMode {
             detection = false;
         }
         return detection;
-    }
+    }*/
 
     //sense line and remain driving on line
     public void line() {
@@ -479,21 +479,21 @@ public class Autonomous extends LinearOpMode {
         robot.RBMotor.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
-        while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+        //while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
             //run til robot is 1 cm away
-            while (wallDetection(10.0) == false) {
+            //while (wallDetection(10.0) == false) {
 
                 // Display the light level while we are looking for the line
-                telemetry.addData("Light Level", lightSensor.getLightDetected());
+                telemetry.addData("Light Level", robot.lightSensor.getLightDetected());
                 telemetry.update();
 
-                if (lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+                if (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
                     robot.LBMotor.setPower(0.0);
                     robot.RBMotor.setPower(0.2);
                 } else
                     robot.LBMotor.setPower(0.2);
                 robot.RBMotor.setPower(0.0);
-            }
+            //}
 
             robot.LBMotor.setPower(0);
             robot.RBMotor.setPower(0);
@@ -504,7 +504,7 @@ public class Autonomous extends LinearOpMode {
 
             beacon();
         }
-    }
+
 
     //sense color of beacon and press button
     public void beacon() {
