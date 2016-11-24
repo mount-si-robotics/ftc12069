@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V10", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V12", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -50,6 +50,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double right;
         double max;
         double breaks;
+        double control;
+        double conveyorPower;
+        double collectionPower;
+        double powerToggle;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -59,6 +63,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
+        conveyorPower = (0.13);
+        collectionPower = (0.5);
+        control = (1);
+        powerToggle = (1);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -78,8 +86,15 @@ public class TeleopLinearOpMode extends LinearOpMode {
                 right /= max;
             }
 
-            robot.LBMotor.setPower(left - breaks);
-            robot.RBMotor.setPower(right - breaks);
+            if (control == 1){
+                robot.LBMotor.setPower((left - breaks) * (powerToggle));
+                robot.RBMotor.setPower((right - breaks) * (powerToggle));
+            }
+            else if (control == 0) {
+                robot.LBMotor.setPower ((-right + breaks) * (powerToggle));
+                robot.RBMotor.setPower ((-left + breaks) * (powerToggle));
+            }
+
 
 
             // Use gamepad2 y and a buttons to control flick arm
@@ -96,10 +111,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Use gamepad2 d-pad to control conveyor belt direction
             if (gamepad2.dpad_up) {
-                robot.conveyorMotor.setPower(-0.13);
+                robot.conveyorMotor.setPower(-conveyorPower);
             }
             else if (gamepad2.dpad_down) {
-                robot.conveyorMotor.setPower(0.13);
+                robot.conveyorMotor.setPower(conveyorPower);
             }
             else {
                 robot.conveyorMotor.setPower(0);
@@ -108,16 +123,33 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Use the bumpers on controller 1 ato control the ball collection mechanism
             if (gamepad1.left_bumper) {
-                robot.collectionMotor.setPower(0.5);
+                robot.collectionMotor.setPower(collectionPower);
             }
             else if (gamepad1.right_bumper) {
-                robot.collectionMotor.setPower(-0.5);
+                robot.collectionMotor.setPower(-collectionPower);
             }
             else {
                 robot.collectionMotor.setPower(0);
             }
 
 
+            //change control directions
+            if (gamepad1.y) {
+                control = (1);
+            }
+            else if (gamepad1.a) {
+                control = (0);
+            }
+
+            if (gamepad1.x){
+                powerToggle = (1);
+            }
+            else if (gamepad1.a){
+                powerToggle = (0.5);
+            }
+
+            telemetry.addData("Power", powerToggle);
+            telemetry.addData("Direction", control);
             telemetry.update();
             robot.waitForTick(0);
         }
