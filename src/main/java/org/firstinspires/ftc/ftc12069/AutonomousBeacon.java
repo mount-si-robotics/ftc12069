@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.ftc12069;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto drive beacon w/ lego color sensor and time", group = "Pushbot")
 
-
-//@Disabled
-
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto drive to beacon with lego color sensor", group = "Pushbot")
-
-// @Disabled
+@Disabled
 public class AutonomousBeacon extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 

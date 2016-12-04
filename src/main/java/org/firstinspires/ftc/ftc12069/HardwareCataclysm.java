@@ -24,7 +24,7 @@ public class HardwareCataclysm
     public DcMotor  RBMotor  = null;
     public DcMotor  flickMotor    = null;
     public DcMotor conveyorMotor = null;
-    //public DcMotor collectionMotor = null;
+    public DcMotor collectionMotor = null;
     public LightSensor lightSensor = null;
     public OpticalDistanceSensor opticalDistanceSensor = null;
     public ColorSensor colorSensor = null;
@@ -48,7 +48,7 @@ public class HardwareCataclysm
         RBMotor = hwMap.dcMotor.get("RBMotor");
         flickMotor = hwMap.dcMotor.get("flickarm");
         conveyorMotor = hwMap.dcMotor.get("conveyor");
-       // collectionMotor = hwMap.dcMotor.get("collection");
+        collectionMotor = hwMap.dcMotor.get("collection");
         lightSensor = hwMap.lightSensor.get("lightSensor");
         opticalDistanceSensor = hwMap.opticalDistanceSensor.get("opticalDistanceSensor");
         colorSensor = hwMap.colorSensor.get("colorSensor");
@@ -59,7 +59,7 @@ public class HardwareCataclysm
         RBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
         conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
-        //collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         lightSensor.enableLed(true);
 
         // Set stopped behaviors
@@ -67,7 +67,7 @@ public class HardwareCataclysm
         RBMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flickMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         conveyorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //collectionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        collectionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Set all motors to zero power
@@ -75,7 +75,7 @@ public class HardwareCataclysm
         RBMotor.setPower(0);
         flickMotor.setPower(0);
         conveyorMotor.setPower(0);
-        //collectionMotor.setPower(0);
+        collectionMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -83,7 +83,7 @@ public class HardwareCataclysm
         RBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         conveyorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //collectionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        collectionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
     }
