@@ -118,7 +118,7 @@ public class Autonomous extends LinearOpMode {
 
     ////////////////////////// light sensor //////////////
 
-    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
+    OpticalDistanceSensor opticalDistanceSensor;   // Alternative MR ODS sensor
 
     private static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
     // static final double APPROACH_SPEED = 0.5;
@@ -482,7 +482,7 @@ public class Autonomous extends LinearOpMode {
     }
 
     private boolean lineDetection() {
-        return !(lightSensor.getRawLightDetected() < WHITE_THRESHOLD || lightSensor.getLightDetected() > WHITE_THRESHOLD);
+        return !(opticalDistanceSensor.getRawLightDetected() < WHITE_THRESHOLD || opticalDistanceSensor.getLightDetected() > WHITE_THRESHOLD);
     }
 
     public void line() {
