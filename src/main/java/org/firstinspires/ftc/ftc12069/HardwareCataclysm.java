@@ -7,8 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LegacyModule;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,7 +31,7 @@ public class HardwareCataclysm
     public OpticalDistanceSensor opticalDistanceSensor = null;
     public ColorSensor colorSensor = null;
     public ModernRoboticsI2cGyro gyro = null;
-
+    public ColorSensor colorSensor2 = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -52,6 +54,8 @@ public class HardwareCataclysm
         lightSensor = hwMap.lightSensor.get("lightSensor");
         opticalDistanceSensor = hwMap.opticalDistanceSensor.get("opticalDistanceSensor");
         colorSensor = hwMap.colorSensor.get("colorSensor");
+        colorSensor2 = hwMap.colorSensor.get("colorSensor2");
+        gyro = (ModernRoboticsI2cGyro) hwMap.gyroSensor.get("gyro");
 
 
         // Set run directions
@@ -60,7 +64,9 @@ public class HardwareCataclysm
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
         conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
         collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         lightSensor.enableLed(true);
+        gyro.calibrate();
 
         // Set stopped behaviors
         LBMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
