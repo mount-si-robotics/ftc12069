@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+//import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -98,29 +98,29 @@ public class Autonomous extends LinearOpMode {
     HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware
     ModernRoboticsI2cGyro gyro = null;                    // Additional Gyro device
 
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For fi guring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    private static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    private static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    private static final double WHEEL_DIAMETER_INCHES = 4.0;     // For fi guring circumference
+    private static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double DRIVE_SPEED = 0.7;     // Nominal speed for better accuracy.
-    static final double TURN_SPEED = 0.5;     // Nominal half speed for better accuracy.
+    private static final double DRIVE_SPEED = 0.7;     // Nominal speed for better accuracy.
+    private static final double TURN_SPEED = 0.5;     // Nominal half speed for better accuracy.
 
-    static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
-    static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
-    static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
+    private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
+    private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
+    private static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
     //////////////////////////////////////////////////////////////
 
     private ElapsedTime holdTimer = new ElapsedTime();
 
     ////////////////////////// light sensor //////////////
 
-    // OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
+    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
 
-    static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
+    private static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
     // static final double APPROACH_SPEED = 0.5;
     ////////////////////////////////////////////////////
 
@@ -421,7 +421,7 @@ public class Autonomous extends LinearOpMode {
 
     //sense line and remain driving on line
 
-    public void drivingToLine(double speed, double distance, double angle) {
+    private void drivingToLine(double speed, double distance, double angle) {
 
         int newLeftTarget;
         int moveCounts;
@@ -433,7 +433,7 @@ public class Autonomous extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-            while (lineDetection() == false) {
+            while (lineDetection()) {
                 // Determine new target position, and pass to motor controller
                 moveCounts = (int) (distance * COUNTS_PER_INCH);
                 newLeftTarget = robot.LBMotor.getCurrentPosition() + moveCounts;
@@ -481,18 +481,14 @@ public class Autonomous extends LinearOpMode {
         }
     }
 
-    public boolean lineDetection() {
-        if (robot.lightSensor.getRawLightDetected() < WHITE_THRESHOLD || robot.lightSensor.getLightDetected() > WHITE_THRESHOLD) {
-            return false;
-        } else {
-            return true;
-        }
+    private boolean lineDetection() {
+        return !(lightSensor.getRawLightDetected() < WHITE_THRESHOLD || lightSensor.getLightDetected() > WHITE_THRESHOLD);
     }
 
     public void line() {
 
-       /* //double reflectance = opticalDistanceSensor.getLightDetected();
-        robot.LBMotor.setPower(APPROACH_SPEED);
+       //double reflectance = lightSensor.getLightDetected();
+        /*robot.LBMotor.setPower(APPROACH_SPEED);
         robot.RBMotor.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
@@ -523,7 +519,7 @@ public class Autonomous extends LinearOpMode {
 
 
     //sense color of beacon and press button
-    public void beacon() {
+    private void beacon() {
 
         if (colorSensor.red() > 5) {
             robot.LBMotor.setTargetPosition(10);
