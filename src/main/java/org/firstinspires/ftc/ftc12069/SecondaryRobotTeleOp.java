@@ -32,51 +32,63 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.ftc12069;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name="Joystick Test", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-//@Disabled
-public class JoyStickTest extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
+@TeleOp(name = "SecondaryTeleop V1", group = "Cataclysm Hardware OpModes")
+public class SecondaryRobotTeleOp extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
+    CataclysmHardware2 robot = new CataclysmHardware2();   // Use Cataclysms hardware map
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
+        double left;
+        double right;
+        double max;
+
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
 
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("JoyPos", "LeftStickX:  " + -gamepad1.left_stick_x);
-            telemetry.addData("JoyPos", "LeftStickY: " + -gamepad1.left_stick_y);
-            telemetry.addData("JoyPos", "RightStickX: " + -gamepad1.right_stick_x);
-            telemetry.addData("JoyPos", "RightStickY: " + -gamepad1.right_stick_y);
-            telemetry.addData("JoyPos", "LeftStick2Y: " + -gamepad2.left_stick_y);
-            telemetry.addData("JoyPos", "LeftStick2X: " + -gamepad2.left_stick_x);
-            telemetry.addData("JoyPos", "RightStick2Y: " + -gamepad2.right_stick_y);
-            telemetry.addData("JoyPos", "RightStick2X:" + -gamepad2.right_stick_x);
+
+            // Run wheels in tank drive mode
+            left = (-gamepad1.left_stick_y);
+            right = (-gamepad1.right_stick_y);
+
+            // Normalize the values so neither exceed +/- 100
+            max = Math.max(Math.abs(left), Math.abs(right));
+
+            if (max > 1.0) {
+                left /= max;
+                right /= max;
+            }
+
+            robot.LBMotor.setPower(left);
+            robot.RBMotor.setPower(right);
+
+            //Use gamepad y and a buttons to controll flick arm
+            if (gamepad1.y) {
+                robot.flickMotor.setPower(1);
+            } else if (gamepad1.a) {
+                robot.flickMotor.setPower(-1);
+            }else {
+                robot.flickMotor.setPower(0);
+            }
+
+
             telemetry.update();
-
-
+            robot.waitForTick(0);
         }
     }
 }
