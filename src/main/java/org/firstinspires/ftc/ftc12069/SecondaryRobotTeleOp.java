@@ -77,16 +77,6 @@ public class SecondaryRobotTeleOp extends LinearOpMode {
             robot.LBMotor.setPower(left);
             robot.RBMotor.setPower(right);
 
-            //Use gamepad y and a buttons to controll flick arm
-            if (gamepad1.y) {
-                robot.flickMotor.setPower(1);
-            } else if (gamepad1.a) {
-                robot.flickMotor.setPower(-1);
-            }else {
-                robot.flickMotor.setPower(0);
-            }
-
-
             telemetry.update();
             robot.waitForTick(0);
         }
