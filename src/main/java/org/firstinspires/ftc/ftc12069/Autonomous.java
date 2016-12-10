@@ -10,11 +10,13 @@ import android.graphics.Color;
 
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+//import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.ftc12069.HardwareCataclysm;
@@ -63,16 +65,14 @@ public class Autonomous extends LinearOpMode {
         collectionMotor = hardwareMap.dcMotor.get("collection");
         beaconPusher = hardwareMap.dcMotor.get("beaconPusher");
         LBMotor.setDirection(DcMotor.Direction.REVERSE);
+        // buttonPusher = hardwareMap.servo.get("ButtonPusherCRServo");
         modernRobotics = hardwareMap.colorSensor.get("colorSensorMR");
         ODS = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
         sensorType = hardwareMap.gyroSensor.get("gyro");
 
-
         Gyro = (ModernRoboticsI2cGyro) sensorType;
 
-
         // buttonPusher.setPosition(0);
-
 
         LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,7 +88,8 @@ public class Autonomous extends LinearOpMode {
         runtime.reset();
 
 
-        moveRobot2(30, .4f);
+        sleep(10000);
+        moveRobot2(40, .4f);
 
 
         flickMotor.setPower(1);
@@ -106,7 +107,12 @@ public class Autonomous extends LinearOpMode {
         flickMotor.setPower(0);
         sleep(750);
         moveRobot2(30, .4f);
-
+      /* turnUsingLeftMotors(-45, .2f, 0);
+       moveRobot2(60, .2f, -35);
+       turnUsingRightMotors(0, .2f);
+       setMotorSpeed(.2f);
+       sleep(750);
+       CheckBeaconForRed(-.2f, 5); */
     }
 
 
@@ -249,10 +255,14 @@ public class Autonomous extends LinearOpMode {
                 rightPower = 0;
             LBMotor.setPower(leftPower);
             RBMotor.setPower(rightPower);
-            telemetry.addData("leftPower", leftPower);
-            telemetry.addData("rightPower", rightPower);
-            telemetry.addData("drivestering", drivesteering);
-            telemetry.addData("angle", currentheading);
+            telemetry.addData("leftPower",
+                    leftPower);
+            telemetry.addData("rightPower",
+                    rightPower);
+            telemetry.addData("drivestering",
+                    drivesteering);
+            telemetry.addData("angle",
+                    currentheading);
             telemetry.update();
         }
         setMotorSpeed(0);
@@ -421,3 +431,5 @@ public class Autonomous extends LinearOpMode {
         LBMotor.setPower(speed);
     }
 }
+
+
