@@ -86,7 +86,7 @@ public class HardwareCataclysm
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         conveyorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         collectionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
