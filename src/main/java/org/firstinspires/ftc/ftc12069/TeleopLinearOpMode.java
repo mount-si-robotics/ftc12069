@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V12", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V1.12", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -1,18 +1,11 @@
 package org.firstinspires.ftc.ftc12069;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.LegacyModule;
-import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -23,15 +16,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareCataclysm
 {
     public DcMotor LBMotor   = null;
-    public DcMotor  RBMotor  = null;
-    public DcMotor  flickMotor    = null;
+    public DcMotor RBMotor  = null;
+    public DcMotor flickMotor    = null;
     public DcMotor conveyorMotor = null;
     public DcMotor collectionMotor = null;
-    public LightSensor lightSensor = null;
+    public DcMotor beaconPusher = null;
+
     public OpticalDistanceSensor opticalDistanceSensor = null;
-    public ColorSensor colorSensor = null;
     public ModernRoboticsI2cGyro gyro = null;
-    public ColorSensor colorSensor2 = null;
+    public ModernRoboticsI2cColorSensor colorSensorMR = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -46,17 +39,22 @@ public class HardwareCataclysm
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+        //AL00VTAC
         LBMotor = hwMap.dcMotor.get("LBMotor");
         RBMotor = hwMap.dcMotor.get("RBMotor");
+
+        //AHO3ELKE
         flickMotor = hwMap.dcMotor.get("flickarm");
         conveyorMotor = hwMap.dcMotor.get("conveyor");
-        collectionMotor = hwMap.dcMotor.get("collection");
-        lightSensor = hwMap.lightSensor.get("lightSensor");
-        opticalDistanceSensor = hwMap.opticalDistanceSensor.get("opticalDistanceSensor");
-        colorSensor = hwMap.colorSensor.get("colorSensor");
-        colorSensor2 = hwMap.colorSensor.get("colorSensor2");
-        gyro = (ModernRoboticsI2cGyro) hwMap.gyroSensor.get("gyro");
 
+        //AHO3ELKU
+        collectionMotor = hwMap.dcMotor.get("collection");
+        beaconPusher = hwMap.dcMotor.get("beaconPusher");
+
+        //Sensors
+        opticalDistanceSensor = hwMap.opticalDistanceSensor.get("opticalDistanceSensor");
+        colorSensorMR = (ModernRoboticsI2cColorSensor) hwMap.colorSensor.get("colorSensorMR");
+        gyro = (ModernRoboticsI2cGyro) hwMap.gyroSensor.get("gyro");
 
         // Set run directions
         LBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -64,8 +62,9 @@ public class HardwareCataclysm
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
         conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
         collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        beaconPusher.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        lightSensor.enableLed(true);
+        //Initialize sensors
         gyro.calibrate();
 
         // Set stopped behaviors
@@ -74,7 +73,7 @@ public class HardwareCataclysm
         flickMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         conveyorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         collectionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        beaconPusher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         LBMotor.setPower(0);
@@ -82,6 +81,7 @@ public class HardwareCataclysm
         flickMotor.setPower(0);
         conveyorMotor.setPower(0);
         collectionMotor.setPower(0);
+        beaconPusher.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
