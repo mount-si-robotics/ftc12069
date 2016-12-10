@@ -33,6 +33,7 @@ package org.firstinspires.ftc.ftc12069;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -77,8 +78,8 @@ import com.qualcomm.robotcore.util.Range;
 * drives straight to center to launch balls and parks in center landing spot
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto drive to center with gyrp", group = "Pushbot")
-//@Disabled
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto drive to center with gyro", group = "Pushbot")
+@Disabled
 public class AutonomousGyroFlickLauncher extends LinearOpMode {
 
     /////////////// Gyro //////////////////////////////////////////

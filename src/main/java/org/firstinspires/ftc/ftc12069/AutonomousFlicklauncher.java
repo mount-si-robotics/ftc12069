@@ -32,6 +32,7 @@ package org.firstinspires.ftc.ftc12069;
 
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -77,7 +78,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto drive to center", group = "Pushbot")
-//@Disabled
+@Disabled
 public class AutonomousFlicklauncher extends LinearOpMode {
 
     HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware
