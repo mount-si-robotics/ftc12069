@@ -117,7 +117,7 @@ public class AutonomousGyroFlickLauncher extends LinearOpMode {
          * The init() method of the hardware class does most of the work here
          */
         robot.init(hardwareMap);
-        gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        //gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
         robot.LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
