@@ -31,29 +31,29 @@ public class CataclysmHardware2
         // Define and Initialize Motors
         LBMotor = hwMap.dcMotor.get("LBMotor");
         RBMotor = hwMap.dcMotor.get("RBMotor");
-        flickMotor = hwMap.dcMotor.get("flickarm");
+        //flickMotor = hwMap.dcMotor.get("flickarm");
 
 
         // Set run directions
         LBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        flickMotor.setDirection(DcMotor.Direction.FORWARD);
+        //flickMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set stopped behaviors
         LBMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RBMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        flickMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //flickMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         LBMotor.setPower(0);
         RBMotor.setPower(0);
-        flickMotor.setPower(0);
+        //flickMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //flickMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
     }
