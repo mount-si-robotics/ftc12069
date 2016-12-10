@@ -35,7 +35,7 @@ package org.firstinspires.ftc.ftc12069;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Manjesh/Hari) - V2", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode (Manjesh/Hari) - V1.2", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode2 extends LinearOpMode {
 
     /* Declare OpMode members. */

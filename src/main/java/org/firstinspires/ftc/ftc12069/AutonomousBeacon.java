@@ -41,7 +41,7 @@ public class AutonomousBeacon extends LinearOpMode {
         while (!(isStarted() || isStopRequested())) {
 
             // Display the light level while we are waiting to start
-            telemetry.addData("Light Level", robot.lightSensor.getLightDetected());
+            telemetry.addData("Light Level", robot.opticalDistanceSensor.getLightDetected());
             telemetry.update();
             idle();
         }
@@ -65,15 +65,15 @@ public class AutonomousBeacon extends LinearOpMode {
       //  robot.RBMotor.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
-        while (opModeIsActive() && (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+        while (opModeIsActive() && (robot.opticalDistanceSensor.getLightDetected() < WHITE_THRESHOLD)) {
             //run til robot is 1 cm away
 
 
                 // Display the light level while we are looking for the line
-                telemetry.addData("Light Level", robot.lightSensor.getLightDetected());
+                telemetry.addData("Light Level", robot.opticalDistanceSensor.getLightDetected());
                 telemetry.update();
 
-                while(robot.lightSensor.getLightDetected() < WHITE_THRESHOLD){
+                while(robot.opticalDistanceSensor.getLightDetected() < WHITE_THRESHOLD){
                     robot.LBMotor.setPower(0.2);
                     robot.RBMotor.setPower(0.2);
                 }
