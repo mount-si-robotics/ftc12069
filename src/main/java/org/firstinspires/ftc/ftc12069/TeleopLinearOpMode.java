@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Calvin/Beau) - V1.12", group = "Cataclysm Hardware OpModes")
+@TeleOp(name = "Catacylsm Linear OpMode - V1.2", group = "Cataclysm Hardware OpModes")
 public class TeleopLinearOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -54,6 +54,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
         double conveyorPower;
         double collectionPower;
         double powerToggle;
+        double flickPower;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -63,8 +64,9 @@ public class TeleopLinearOpMode extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
-        conveyorPower = (0.13);
-        collectionPower = (0.5);
+        conveyorPower = (0.30);
+        collectionPower = (0.30);
+        flickPower = (1);
         control = (1);
         powerToggle = (1);
 
@@ -99,10 +101,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
             // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y) {
-                robot.flickMotor.setPower(1);
+                robot.flickMotor.setPower(flickPower);
             }
             else if (gamepad2.a) {
-                robot.flickMotor.setPower(-1);
+                robot.flickMotor.setPower(-flickPower);
             }
             else {
                 robot.flickMotor.setPower(0.0);
@@ -110,10 +112,10 @@ public class TeleopLinearOpMode extends LinearOpMode {
 
 
             // Use gamepad2 d-pad to control conveyor belt direction
-            if (gamepad2.dpad_up) {
+            if ((gamepad2.dpad_up)||(gamepad1.dpad_up)) {
                 robot.conveyorMotor.setPower(-conveyorPower);
             }
-            else if (gamepad2.dpad_down) {
+            else if ((gamepad2.dpad_down)||(gamepad1.dpad_down)) {
                 robot.conveyorMotor.setPower(conveyorPower);
             }
             else {
@@ -144,7 +146,7 @@ public class TeleopLinearOpMode extends LinearOpMode {
             if (gamepad1.x){
                 powerToggle = (1);
             }
-            else if (gamepad1.a){
+            else if (gamepad1.b){
                 powerToggle = (0.5);
             }
 

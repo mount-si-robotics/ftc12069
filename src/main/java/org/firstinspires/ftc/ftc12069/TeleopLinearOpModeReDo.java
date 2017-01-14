@@ -35,8 +35,8 @@ package org.firstinspires.ftc.ftc12069;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Catacylsm Linear OpMode (Manjesh/Hari) - V1.2", group = "Cataclysm Hardware OpModes")
-public class TeleopLinearOpMode2 extends LinearOpMode {
+@TeleOp(name = "Catacylsm Linear OpMode - V.TEST", group = "Cataclysm Hardware OpModes")
+public class TeleopLinearOpModeReDo extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareCataclysm robot = new HardwareCataclysm();   // Use Cataclysms hardware map
@@ -46,9 +46,6 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
         double left;
         double right;
         double max;
-        double breaks;
-        double conveyorPower;
-        double collectionPower;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -58,8 +55,6 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Robot Initialized");
         telemetry.update();
-        conveyorPower = (0.13);
-        collectionPower = (0.5);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -68,9 +63,8 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank drive mode
-            left = (-gamepad1.left_stick_y);
-            right = (-gamepad1.right_stick_y);
-            breaks = (Math.abs(gamepad1.right_trigger));
+            left = (gamepad1.left_stick_y);
+            right = (gamepad1.right_stick_y);
 
             // Normalize the values so neither exceed +/- 100
             max = Math.max(Math.abs(left), Math.abs(right));
@@ -79,57 +73,44 @@ public class TeleopLinearOpMode2 extends LinearOpMode {
                 right /= max;
             }
 
-            robot.LBMotor.setPower(left - breaks);
-            robot.RBMotor.setPower(right - breaks);
+            robot.LBMotor.setPower(left);
+            robot.RBMotor.setPower(right);
+
+            // Gamepad 1
+            // Use the bumpers on controller 1 to control the ball collection mechanism
+            if (gamepad1.left_bumper) {
+                robot.collectionMotor.setPower(1);
+            }
+            else if (gamepad1.right_bumper) {
+                robot.collectionMotor.setPower(-1);
+            }
+            else {
+                robot.collectionMotor.setPower(-0.2);
+            }
 
 
-            // Use gamepad2 y and b buttons to control flick arm
+            // Gamepad 2
+            // Use gamepad2 y and a buttons to control flick arm
             if (gamepad2.y) {
                 robot.flickMotor.setPower(1);
             }
-            else if (gamepad2.b) {
+            else if (gamepad2.a) {
                 robot.flickMotor.setPower(-1);
             }
             else {
                 robot.flickMotor.setPower(0.0);
             }
 
-
             // Use gamepad2 d-pad to control conveyor belt direction
-            if (gamepad2.dpad_up) {
-                robot.conveyorMotor.setPower(-conveyorPower);
+            if ((gamepad2.dpad_up)||(gamepad1.dpad_up)) {
+                robot.conveyorMotor.setPower(-0.5);
             }
-            else if (gamepad2.dpad_down) {
-                robot.conveyorMotor.setPower(conveyorPower);
-            }
-            else if (gamepad1.dpad_up) {
-                robot.conveyorMotor.setPower(-conveyorPower);
-            }
-            else if (gamepad1.dpad_down) {
-                robot.conveyorMotor.setPower(conveyorPower);
+            else if ((gamepad2.dpad_down)||(gamepad1.dpad_down)) {
+                robot.conveyorMotor.setPower(0.5);
             }
             else {
                 robot.conveyorMotor.setPower(0);
             }
-
-
-            // Use the bumpers on controller 1 ato control the ball collection mechanism
-            if (gamepad2.left_bumper) {
-                robot.collectionMotor.setPower(collectionPower);
-            }
-            else if (gamepad2.right_bumper) {
-                robot.collectionMotor.setPower(-collectionPower);
-            }
-            else if (gamepad1.left_bumper) {
-                robot.collectionMotor.setPower(-collectionPower);
-            }
-            else if (gamepad1.right_bumper){
-                robot.collectionMotor.setPower(collectionPower);
-            }
-            else {
-                robot.collectionMotor.setPower(0);
-            }
-
 
             telemetry.update();
             robot.waitForTick(0);

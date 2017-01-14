@@ -20,7 +20,6 @@ public class HardwareCataclysm
     public DcMotor flickMotor    = null;
     public DcMotor conveyorMotor = null;
     public DcMotor collectionMotor = null;
-    public DcMotor beaconPusher = null;
 
     public OpticalDistanceSensor opticalDistanceSensor = null;
     public ModernRoboticsI2cGyro gyro = null;
@@ -39,7 +38,7 @@ public class HardwareCataclysm
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        //AL00VTAC
+        //AHO3ELKU
         LBMotor = hwMap.dcMotor.get("LBMotor");
         RBMotor = hwMap.dcMotor.get("RBMotor");
 
@@ -47,9 +46,8 @@ public class HardwareCataclysm
         flickMotor = hwMap.dcMotor.get("flickarm");
         conveyorMotor = hwMap.dcMotor.get("conveyor");
 
-        //AHO3ELKU
+        //AL00VTAC
         collectionMotor = hwMap.dcMotor.get("collection");
-        beaconPusher = hwMap.dcMotor.get("beaconPusher");
 
         //Sensors
         opticalDistanceSensor = hwMap.opticalDistanceSensor.get("opticalDistanceSensor");
@@ -62,7 +60,6 @@ public class HardwareCataclysm
         flickMotor.setDirection(DcMotor.Direction.FORWARD);
         conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
         collectionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        beaconPusher.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //Initialize sensors
         gyro.calibrate();
@@ -73,7 +70,6 @@ public class HardwareCataclysm
         flickMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         conveyorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         collectionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        beaconPusher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         LBMotor.setPower(0);
@@ -81,7 +77,6 @@ public class HardwareCataclysm
         flickMotor.setPower(0);
         conveyorMotor.setPower(0);
         collectionMotor.setPower(0);
-        beaconPusher.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
