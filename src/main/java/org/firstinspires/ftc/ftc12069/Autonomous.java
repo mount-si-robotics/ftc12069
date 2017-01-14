@@ -17,6 +17,7 @@ package org.firstinspires.ftc.ftc12069;
 
         import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
         //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.hardware.ColorSensor;
         import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,7 +31,7 @@ package org.firstinspires.ftc.ftc12069;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro to center - Blue", group = "Pushbot")
 
 
-//@Disabled
+@Disabled
 public class Autonomous extends LinearOpMode {
     // Use Cataclysms hardware
    /* Declare OpMode members. */
