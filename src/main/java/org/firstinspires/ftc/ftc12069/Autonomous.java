@@ -4,7 +4,7 @@
  * Created by rahulrajkumar on 1/13/17.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.ftc12069;
 
 
 /**
@@ -16,16 +16,15 @@ package org.firstinspires.ftc.teamcode;
 
 
         import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.hardware.ColorSensor;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.GyroSensor;
         import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-//import com.qualcomm.robotcore.hardware.Servo;
+        //import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.ElapsedTime;
-
-        import org.firstinspires.ftc.teamcode.HardwareCataclysm;
+        //import org.firstinspires.ftc.ftc12069.HardwareCataclysm;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro to center", group = "Pushbot")
