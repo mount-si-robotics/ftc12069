@@ -12,26 +12,26 @@ package org.firstinspires.ftc.ftc12069;
  */
 
 
-        import android.graphics.Color;
+import android.graphics.Color;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-        //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.hardware.ColorSensor;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.GyroSensor;
-        import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-        //import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.robotcore.util.ElapsedTime;
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+//import com.qualcomm.robotcore.hardware.Servo;
         //import org.firstinspires.ftc.ftc12069.HardwareCataclysm;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro to center - Blue", group = "Pushbot")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Pushbot: Auto Drive By Gyro to center - Red", group = "Pushbot")
 
 
 //@Disabled
-public class Autonomous extends LinearOpMode {
+public class AutonomousRed extends LinearOpMode {
     // Use Cataclysms hardware
    /* Declare OpMode members. */
 
@@ -67,8 +67,8 @@ public class Autonomous extends LinearOpMode {
         flickMotor = hardwareMap.dcMotor.get("flickarm");
         conveyorMotor = hardwareMap.dcMotor.get("conveyor");
         collectionMotor = hardwareMap.dcMotor.get("collection");
-        //LBMotor.setDirection(DcMotor.Direction.REVERSE);
-        RBMotor.setDirection(DcMotor.Direction.REVERSE);
+        LBMotor.setDirection(DcMotor.Direction.REVERSE);
+        //RBMotor.setDirection(DcMotor.Direction.REVERSE);
         // buttonPusher = hardwareMap.servo.get("ButtonPusherCRServo");
         modernRobotics = hardwareMap.colorSensor.get("colorSensorMR");
         ODS = hardwareMap.opticalDistanceSensor.get("opticalDistanceSensor");
@@ -97,13 +97,13 @@ public class Autonomous extends LinearOpMode {
 
         LBMotor.setPower(.5);
         RBMotor.setPower(.5);
-        sleep(1000);
+        sleep(1500);
         LBMotor.setPower(0);
         RBMotor.setPower(0);
         flickMotor.setPower(1);
         sleep(950);
         flickMotor.setPower(0);
-        conveyorMotor.setPower(-.15);
+        conveyorMotor.setPower(-0.15);
         sleep(500);
         conveyorMotor.setPower(0);
         sleep(800);
