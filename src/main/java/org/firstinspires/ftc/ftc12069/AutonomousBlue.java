@@ -92,7 +92,7 @@ public class AutonomousBlue extends LinearOpMode {
         runtime.reset();
 
 
-       // sleep(10000);
+        sleep(10000);
        // moveRobot(50.0, .4f);
 
         LBMotor.setPower(.5);
